@@ -14,4 +14,4 @@ target_include_directories(mtmetis-test
 
 find_package(OpenMP REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX ${CMAKE_SOURCE_DIR}/lib/libmtmetis.a SnapFile) 
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX SnapFile) 
