@@ -49,7 +49,7 @@ int main() {
 
 void partition(uint64_t nvtxs, const uint64_t *xadj, const uint64_t *adjncy) {
   mtmetis_pid_type nparts = 2;
-  uint64_t r_edgecut;
+  long int r_edgecut;
   //
   //  On return, the partition vector for the graph.
   //
