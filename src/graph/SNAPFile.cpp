@@ -9,6 +9,8 @@
 
 #include "graph/SNAPFile.hpp"
 
+#include <stdint.h>
+
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -24,8 +26,8 @@
 namespace {
 
 struct edge_struct {
-  mtmetis_vtx_type src;
-  mtmetis_vtx_type dst;
+  uint64_t src;
+  uint64_t dst;
 };
 
 }  // namespace
@@ -73,7 +75,7 @@ std::vector<std::string> split(std::string const line) {
 }
 
 std::vector<edge_struct> readEdges(TextFile* file,
-                                   mtmetis_adj_type const numEdges = 0) {
+                                   uint64_t const numEdges = 0) {
   std::string line;
   std::vector<edge_struct> edges;
   if (numEdges != 0) {
@@ -94,7 +96,7 @@ std::vector<edge_struct> readEdges(TextFile* file,
       }
 
       sptr = eptr;
-      edge.src = static_cast<mtmetis_vtx_type>(std::strtoull(sptr, &eptr, 10));
+      edge.src = static_cast<uint64_t>(std::strtoull(sptr, &eptr, 10));
       if (eptr == sptr) {
         throw BadFileException("Unable to parse line: '" + line + "'");
       }
@@ -115,22 +117,21 @@ std::vector<edge_struct> readEdges(TextFile* file,
  * @param numVerticesOut The memory address to write the number of vertices to.
  * @param numEdgesOut The memory address to write the number of edges to.
  */
-void countVerticesAndEdges(TextFile* const file,
-                           mtmetis_vtx_type* const numVerticesOut,
-                           mtmetis_adj_type* const numEdgesOut) {
-  std::unordered_set<mtmetis_vtx_type> vertices;
+void countVerticesAndEdges(TextFile* const file, uint64_t* const numVerticesOut,
+                           uint64_t* const numEdgesOut) {
+  std::unordered_set<uint64_t> vertices;
   std::string line;
-  mtmetis_adj_type numEdges = 0;
+  uint64_t numEdges = 0;
   while (file->nextLine(line)) {
     char* eptr = (char*)line.data();
     char* sptr = eptr;
-    mtmetis_vtx_type const src = std::strtoull(sptr, &eptr, 10);
+    uint64_t const src = std::strtoull(sptr, &eptr, 10);
     if (eptr == sptr) {
       throw BadFileException("Unable to parse line: '" + line + "'");
     }
 
     sptr = eptr;
-    mtmetis_vtx_type const dst = std::strtoull(sptr, &eptr, 10);
+    uint64_t const dst = std::strtoull(sptr, &eptr, 10);
     if (eptr == sptr) {
       throw BadFileException("Unable to parse line: '" + line + "'");
     }
@@ -141,7 +142,7 @@ void countVerticesAndEdges(TextFile* const file,
     ++numEdges;
   }
 
-  *numVerticesOut = static_cast<mtmetis_vtx_type>(vertices.size());
+  *numVerticesOut = static_cast<uint64_t>(vertices.size());
   *numEdgesOut = numEdges;
 }
 
@@ -185,8 +186,8 @@ void SNAPFile::readHeader() {
       }
 
       try {
-        m_numVertices = static_cast<mtmetis_vtx_type>(std::stoull(chunks[2]));
-        m_numEdges = static_cast<mtmetis_adj_type>(std::stoull(chunks[4]));
+        m_numVertices = static_cast<uint64_t>(std::stoull(chunks[2]));
+        m_numEdges = static_cast<uint64_t>(std::stoull(chunks[4]));
       } catch (std::exception const& e) {
         throw BadFileException(std::string("Failed to parse vertices and "
                                            "edges from header line: ") +
@@ -236,15 +237,13 @@ SNAPFile::~SNAPFile() {
  * PUBLIC METHODS **************************************************************
  ******************************************************************************/
 
-void SNAPFile::read(mtmetis_adj_type* const xadj,
-                    mtmetis_vtx_type* const adjncy,
-                    mtmetis_adj_type* out_edges) {
+void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
+                    uint64_t* out_edges) {
   if (m_numVertices == 0) {
     return;
   }
 
-  mtmetis_vtx_type const interval =
-      m_numEdges * 2 > 100 ? m_numEdges * 2 / 100 : 1;
+  uint64_t const interval = m_numEdges * 2 > 100 ? m_numEdges * 2 / 100 : 1;
   double const increment = 1.0 / 100.0;
 
   std::string line;
@@ -253,7 +252,7 @@ void SNAPFile::read(mtmetis_adj_type* const xadj,
   const std::vector<edge_struct> edges = readEdges(&m_file, m_numEdges);
 
   // zero out xadj
-  for (mtmetis_vtx_type i = 0; i < m_numVertices; ++i) {
+  for (uint64_t i = 0; i < m_numVertices; ++i) {
     xadj[i] = 0;
   }
 
@@ -278,22 +277,22 @@ void SNAPFile::read(mtmetis_adj_type* const xadj,
 
   // shift xadj and prefixsum
   xadj[0] = 0;
-  for (mtmetis_vtx_type v = 1; v <= m_numVertices; ++v) {
+  for (uint64_t v = 1; v <= m_numVertices; ++v) {
     xadj[v] += xadj[v - 1];
   }
-  for (mtmetis_vtx_type v = m_numVertices; v > 0; --v) {
+  for (uint64_t v = m_numVertices; v > 0; --v) {
     xadj[v] = xadj[v - 1];
   }
   assert(xadj[0] == 0);
 
   // fill in edges
   for (edge_struct const& edge : edges) {
-    mtmetis_adj_type const srcIdx = xadj[edge.src + 1];
+    uint64_t const srcIdx = xadj[edge.src + 1];
     adjncy[srcIdx] = edge.dst;
     ++xadj[edge.src + 1];
 
     if (!m_directed) {
-      mtmetis_adj_type const dstIdx = xadj[edge.dst + 1];
+      uint64_t const dstIdx = xadj[edge.dst + 1];
       adjncy[dstIdx] = edge.src;
       ++xadj[edge.dst + 1];
     }
@@ -303,7 +302,7 @@ void SNAPFile::read(mtmetis_adj_type* const xadj,
   assert(xadj[m_numVertices] == m_numEdges);
 }
 
-void SNAPFile::getInfo(mtmetis_vtx_type& nvtxs, mtmetis_adj_type& nedges) {
+void SNAPFile::getInfo(uint64_t& nvtxs, uint64_t& nedges) {
   readHeader();
 
   nvtxs = m_numVertices;

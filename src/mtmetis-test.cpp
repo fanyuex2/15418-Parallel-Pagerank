@@ -20,7 +20,7 @@ void partition(mtmetis_vtx_type nvtxs, const mtmetis_adj_type *xadj,
 
 int main() {
   // wildriver_graph_handle * handle;
-  string s = "/jet/home/xiaf/pagerank/test/test.snap";
+  string s = "../test/test.snap";
   const char *filename = s.c_str();
   SNAPFile snap_file(s);
   int rc = 0;

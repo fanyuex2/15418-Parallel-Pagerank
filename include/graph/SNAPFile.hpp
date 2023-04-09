@@ -8,6 +8,8 @@
 * @date 2018-04-07
 */
 
+#include <stdint.h>
+
 #include "graph/TextFile.hpp"
 #include "metis/mtmetis.h"
 
