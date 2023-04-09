@@ -13,8 +13,7 @@
 using namespace std;
 
 int main();
-void partition(mtmetis_vtx_type nvtxs, const mtmetis_adj_type *xadj,
-               const mtmetis_vtx_type *adjncy);
+void partition(uint64_t nvtxs, const uint64_t *xadj, const uint64_t *adjncy);
 
 //****************************************************************************80
 
@@ -24,12 +23,12 @@ int main() {
   const char *filename = s.c_str();
   SNAPFile snap_file(s);
   int rc = 0;
-  mtmetis_vtx_type nvtxs;
-  mtmetis_adj_type nedges;
+  uint64_t nvtxs;
+  uint64_t nedges;
   snap_file.getInfo(nvtxs, nedges);
-  mtmetis_vtx_type adjncy[nedges];
-  mtmetis_adj_type xadj[nvtxs + 1];
-  mtmetis_adj_type outedges[nvtxs] = {0};
+  uint64_t adjncy[nedges];
+  uint64_t xadj[nvtxs + 1];
+  uint64_t outedges[nvtxs] = {0};
   snap_file.read(xadj, adjncy, outedges);
 
   for (int i = 0; i < nvtxs + 1; i++) {
@@ -48,10 +47,9 @@ int main() {
   return rc;
 }
 
-void partition(mtmetis_vtx_type nvtxs, const mtmetis_adj_type *xadj,
-               const mtmetis_vtx_type *adjncy) {
+void partition(uint64_t nvtxs, const uint64_t *xadj, const uint64_t *adjncy) {
   mtmetis_pid_type nparts = 2;
-  mtmetis_wgt_type r_edgecut;
+  uint64_t r_edgecut;
   //
   //  On return, the partition vector for the graph.
   //
