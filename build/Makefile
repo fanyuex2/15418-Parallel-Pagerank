@@ -163,6 +163,33 @@ src/mtmetis-test.cpp.s:
 	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s
 .PHONY : src/mtmetis-test.cpp.s
 
+src/parallel-pagerank.o: src/parallel-pagerank.cpp.o
+
+.PHONY : src/parallel-pagerank.o
+
+# target to build an object file
+src/parallel-pagerank.cpp.o:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o
+.PHONY : src/parallel-pagerank.cpp.o
+
+src/parallel-pagerank.i: src/parallel-pagerank.cpp.i
+
+.PHONY : src/parallel-pagerank.i
+
+# target to preprocess a source file
+src/parallel-pagerank.cpp.i:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.i
+.PHONY : src/parallel-pagerank.cpp.i
+
+src/parallel-pagerank.s: src/parallel-pagerank.cpp.s
+
+.PHONY : src/parallel-pagerank.s
+
+# target to generate assembly for a file
+src/parallel-pagerank.cpp.s:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.s
+.PHONY : src/parallel-pagerank.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -176,6 +203,9 @@ help:
 	@echo "... src/mtmetis-test.o"
 	@echo "... src/mtmetis-test.i"
 	@echo "... src/mtmetis-test.s"
+	@echo "... src/parallel-pagerank.o"
+	@echo "... src/parallel-pagerank.i"
+	@echo "... src/parallel-pagerank.s"
 .PHONY : help
 
 

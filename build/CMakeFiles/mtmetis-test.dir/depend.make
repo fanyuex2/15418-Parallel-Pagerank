@@ -8,3 +8,5 @@ CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o: ../include/metis/mtmetis.h
 CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o: ../include/metis/wildriver.h
 CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o: ../src/mtmetis-test.cpp
 
+CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o: ../src/parallel-pagerank.cpp
+

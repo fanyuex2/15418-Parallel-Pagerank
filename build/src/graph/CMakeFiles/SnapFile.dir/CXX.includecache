@@ -39,6 +39,8 @@ unistd.h
 /jet/home/xiaf/pagerank/src/graph/SNAPFile.cpp
 graph/SNAPFile.hpp
 /jet/home/xiaf/pagerank/src/graph/graph/SNAPFile.hpp
+stdint.h
+-
 cassert
 -
 iostream

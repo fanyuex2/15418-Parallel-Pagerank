@@ -212,8 +212,8 @@ OpenMP_gomp_LIBRARY:FILEPATH=/usr/lib/gcc/x86_64-redhat-linux/8/libgomp.so
 //Path to the pthread library for OpenMP
 OpenMP_pthread_LIBRARY:FILEPATH=/usr/lib64/libpthread.so
 
-//Dependencies for the target
-SnapFile_LIB_DEPENDS:STATIC=general;/jet/home/xiaf/pagerank/lib/libmtmetis.a;
+//Dependencies for target
+SnapFile_LIB_DEPENDS:STATIC=
 
 //Value Computed by CMake
 mtmetis-test_BINARY_DIR:STATIC=/jet/home/xiaf/pagerank/build

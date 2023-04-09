@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/jet/home/xiaf/pagerank/src/mtmetis-test.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o"
+  "/jet/home/xiaf/pagerank/src/parallel-pagerank.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

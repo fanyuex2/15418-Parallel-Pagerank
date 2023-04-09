@@ -13,6 +13,8 @@ stdexcept
 -
 
 ../include/graph/SNAPFile.hpp
+stdint.h
+-
 graph/TextFile.hpp
 ../include/graph/graph/TextFile.hpp
 metis/mtmetis.h
@@ -59,4 +61,8 @@ graph/SNAPFile.hpp
 /jet/home/xiaf/pagerank/src/graph/SNAPFile.hpp
 metis/wildriver.h
 /jet/home/xiaf/pagerank/src/metis/wildriver.h
+
+/jet/home/xiaf/pagerank/src/parallel-pagerank.cpp
+stdint.h
+-
 
