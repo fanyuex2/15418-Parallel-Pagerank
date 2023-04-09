@@ -1,7 +1,7 @@
 #include "metis/mtmetis.h"
 
 #include <stdio.h>
-#include <stdint.t>
+#include <stdint.h>
 
 #include <cstddef>
 #include <ctime>
