@@ -12,14 +12,6 @@ string
 stdexcept
 -
 
-../include/common.h
-memory
--
-string
--
-vector
--
-
 ../include/graph/SNAPFile.hpp
 stdint.h
 -
@@ -37,12 +29,6 @@ vector
 -
 Exception.hpp
 ../include/graph/Exception.hpp
-
-../include/graph/metis_graph.h
-common.h
-../include/graph/common.h
-graph/SNAPFile.hpp
-../include/graph/graph/SNAPFile.hpp
 
 ../include/metis/mtmetis.h
 float.h
@@ -71,10 +57,12 @@ iostream
 -
 vector
 -
-graph/metis_graph.h
-/jet/home/xiaf/pagerank/src/graph/metis_graph.h
+graph/SNAPFile.hpp
+/jet/home/xiaf/pagerank/src/graph/SNAPFile.hpp
 metis/wildriver.h
 /jet/home/xiaf/pagerank/src/metis/wildriver.h
+metis.h
+/jet/home/xiaf/pagerank/src/metis.h
 
 /jet/home/xiaf/pagerank/src/parallel-pagerank.cpp
 stdint.h

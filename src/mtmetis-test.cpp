@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "graph/SNAPFile.hpp"
+#include "graph/metis_graph.h"
 #include "metis/wildriver.h"
 
 using namespace std;
@@ -19,32 +19,22 @@ void partition(uint64_t nvtxs, const uint64_t *xadj, const uint64_t *adjncy);
 
 int main() {
   // wildriver_graph_handle * handle;
-  string s = "../test/test.snap";
-  const char *filename = s.c_str();
-  SNAPFile snap_file(s);
-  int rc = 0;
-  uint64_t nvtxs;
-  uint64_t nedges;
-  snap_file.getInfo(nvtxs, nedges);
-  uint64_t adjncy[nedges];
-  uint64_t xadj[nvtxs + 1];
-  uint64_t outedges[nvtxs] = {0};
-  snap_file.read(xadj, adjncy, outedges);
+  std::unique_ptr<MetisGraph> graph = createMetisGraph("../test/hollins.snap");
 
-  for (int i = 0; i < nvtxs + 1; i++) {
-    cout << xadj[i] << ' ';
+  for (int i = 0; i < graph->nvtxs + 1; i++) {
+    cout << graph->xadj[i] << ' ';
   }
   cout << endl;
-  for (int i = 0; i < nedges; i++) {
-    cout << adjncy[i] << ' ';
+  for (int i = 0; i < graph->nedges; i++) {
+    cout << graph->adjncy[i] << ' ';
   }
   cout << endl;
-  for (int i = 0; i < nvtxs; i++) {
-    cout << outedges[i] << ' ';
+  for (int i = 0; i < graph->nvtxs; i++) {
+    cout << graph->outedges[i] << ' ';
   }
   cout << endl;
-  partition(nvtxs, xadj, adjncy);
-  return rc;
+  // partition(nvtxs, xadj, adjncy);
+  return 0;
 }
 
 void partition(uint64_t nvtxs, const uint64_t *xadj, const uint64_t *adjncy) {
