@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/page_rank.dir/src/main.cpp.o CMakeFiles/page_rank.dir/src/mtmetis-test.cpp.o CMakeFiles/page_rank.dir/src/page_rank.cpp.o -o page_rank  src/graph/libSnapFile.a /usr/lib/gcc/x86_64-linux-gnu/11/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 

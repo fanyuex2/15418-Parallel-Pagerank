@@ -261,11 +261,11 @@ void SNAPFile::read(mtmetis_adj_type* const xadj,
   size_t edgesProcessed = 0;
   for (edge_struct const& edge : edges) {
     if (edge.src >= m_numVertices) {
-      throw BadFileException(std::string("Invalid vertex: ") +
+      throw BadFileException(std::string("Invalid src vertex: ") +
                              std::to_string(edge.src));
     } else if (edge.dst >= m_numVertices) {
-      throw BadFileException(std::string("Invalid vertex: ") +
-                             std::to_string(edge.src));
+      throw BadFileException(std::string("Invalid dstvertex: ") +
+                             std::to_string(edge.dst));
     }
     ++xadj[edge.src + 1];
     ++out_edges[edge.dst];

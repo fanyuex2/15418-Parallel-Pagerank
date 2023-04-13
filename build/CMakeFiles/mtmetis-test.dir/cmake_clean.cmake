@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o"
-  "mtmetis-test.pdb"
+  "CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o.d"
   "mtmetis-test"
+  "mtmetis-test.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -1,17 +1,15 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/jet/home/xiaf/pagerank/src/graph/SNAPFile.cpp" "/jet/home/xiaf/pagerank/build/src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o"
-  "/jet/home/xiaf/pagerank/src/graph/TextFile.cpp" "/jet/home/xiaf/pagerank/build/src/graph/CMakeFiles/SnapFile.dir/TextFile.cpp.o"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../include"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/afs/andrew.cmu.edu/usr5/jingweiw/private/15418/15418-Parallel-Pagerank/src/graph/SNAPFile.cpp" "src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o" "gcc" "src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o.d"
+  "/afs/andrew.cmu.edu/usr5/jingweiw/private/15418/15418-Parallel-Pagerank/src/graph/TextFile.cpp" "src/graph/CMakeFiles/SnapFile.dir/TextFile.cpp.o" "gcc" "src/graph/CMakeFiles/SnapFile.dir/TextFile.cpp.o.d"
   )
 
 # Targets to which this target links.
