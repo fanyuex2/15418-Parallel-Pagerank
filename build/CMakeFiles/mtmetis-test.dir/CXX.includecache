@@ -87,6 +87,8 @@ inttypes.h
 /jet/home/xiaf/pagerank/src/graph_partition.cpp
 graph_partition.h
 /jet/home/xiaf/pagerank/src/graph_partition.h
+algorithm
+-
 cassert
 -
 iostream
@@ -111,8 +113,6 @@ metis.h
 /jet/home/xiaf/pagerank/src/metis.h
 
 /jet/home/xiaf/pagerank/src/mtmetis-test.cpp
-metis.h
--
 stdio.h
 -
 cstddef

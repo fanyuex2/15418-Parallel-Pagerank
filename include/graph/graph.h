@@ -10,15 +10,13 @@ class Graph {
  public:
   index_t nvtxs;
   index_t nedges;
+
+  std::vector<index_t> vidx;
   std::vector<index_t> xadj;
   std::vector<index_t> adjncy;
   std::vector<index_t> vwgt;
-  std::vector<index_t> parts;
-  static std::shared_ptr<Graph> createMetisGraph(const std::string file_name);
-  static std::shared_ptr<Graph> createMetisGraphEmpty() {
-    return std::make_shared<Graph>();
-  }
-  void printPartition();
+  static std::unique_ptr<Graph> createMetisGraph(const std::string file_name);
+  void printGraph();
 };
 
 #endif

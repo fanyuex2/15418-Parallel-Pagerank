@@ -1,4 +1,3 @@
-#include <metis.h>
 #include <stdio.h>
 
 #include <cstddef>
@@ -19,22 +18,14 @@ void partition(int nvtxs, const int *xadj, const int *adjncy, int *where);
 
 int main() {
   // wildriver_graph_handle * handle;
-  std::shared_ptr<Graph> graph =
+  std::unique_ptr<Graph> graph =
       Graph::createMetisGraph("../test/hollins.snap");
-
-  std::shared_ptr<Graph> ngraph = GraphPartition::FixGraph(graph);
-
-  int ncon = 1;
-  int nparts = 64;
-  int edgecut;
-  METIS_PartGraphRecursive(&ngraph->nvtxs, &ncon, ngraph->xadj.data(),
-                           ngraph->adjncy.data(), ngraph->vwgt.data(), NULL,
-                           NULL, &nparts, NULL, NULL, NULL, &edgecut,
-                           graph->parts.data());
-  graph->printPartition();
+  std::unique_ptr<GraphPartition> par =
+      std::make_unique<GraphPartition>(std::move(graph), 128);
+  par->partition();
+  par->sortNodesByPart();
   // partition(graph->nvtxs, graph->xadj.data(),
   // graph->adjncy.data(),graph->parts.data());
-
   return 0;
 }
 

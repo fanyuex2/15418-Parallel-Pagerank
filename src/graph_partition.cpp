@@ -1,5 +1,6 @@
 #include "graph_partition.h"
 
+#include <algorithm>  // std::sort, std::stable_sort
 #include <cassert>
 #include <iostream>
 
@@ -13,6 +14,22 @@
 #include "gk_proto.h"
 #include "metis.h"
 
+std::unique_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
+  SNAPFile snap_file(file_name);
+  int rc = 0;
+  index_t nvtxs;
+  index_t nedges;
+  std::unique_ptr<Graph> graph = std::make_unique<Graph>();
+
+  snap_file.getInfo(graph->nvtxs, graph->nedges);
+  graph->xadj.resize(graph->nvtxs + 1);
+  graph->adjncy.resize(graph->nedges);
+
+  snap_file.read(graph->xadj.data(), graph->adjncy.data());
+  return graph;
+}
+
+/*----------------Functions for graph_partition.h------------------------*/
 typedef struct {
   index_t u, v, w; /*!< Edge (u,v) with weight w */
 } uvw_t;
@@ -41,18 +58,15 @@ void uvwsorti(size_t n, uvw_t *base) {
     The routine does not change the provided vertex weights.
 */
 /*************************************************************************/
-std::shared_ptr<Graph> GraphPartition::FixGraph(std::shared_ptr<Graph> graph) {
+void GraphPartition::FixGraph() {
   index_t i, j, k, l, nvtxs, nedges;
   index_t *xadj, *adjncy, *adjwgt;
   index_t *nxadj, *nadjncy;
-  std::shared_ptr<Graph> ngraph;
   uvw_t *edges;
 
   nvtxs = graph->nvtxs;
   xadj = graph->xadj.data();
   adjncy = graph->adjncy.data();
-
-  ngraph = Graph::createMetisGraphEmpty();
 
   ngraph->nvtxs = nvtxs;
 
@@ -87,6 +101,7 @@ std::shared_ptr<Graph> GraphPartition::FixGraph(std::shared_ptr<Graph> graph) {
 
   /* allocate memory for the fixed graph */
   ngraph->xadj.resize(nvtxs + 1);
+  ngraph->nedges = 2 * nedges;
   ngraph->adjncy.resize(2 * nedges);
   nxadj = ngraph->xadj.data();
   nadjncy = ngraph->adjncy.data();
@@ -108,53 +123,64 @@ std::shared_ptr<Graph> GraphPartition::FixGraph(std::shared_ptr<Graph> graph) {
   SHIFTCSR(i, nvtxs, nxadj);
 
   gk_free((void **)&edges, LTERM);
-  ngraph->parts.resize(nvtxs);
 
   // update vertex weight according to the nunmber of incoming edges
   ngraph->vwgt.resize(nvtxs);
   for (k = 0; k < nvtxs; k++) {
     ngraph->vwgt[k] = xadj[k + 1] - xadj[k];
   }
-  return ngraph;
 }
 
-std::vector<std::shared_ptr<Graph>> GraphPartition::DivideGraph(
-    std::shared_ptr<Graph> graph, index_t nparts) {
-  std::vector<std::shared_ptr<Graph>> subgraphs(nparts);
-  for (int i = 0; i < nparts; i++) {
-    subgraphs[i] = Graph::createMetisGraphEmpty();
-  }
+void GraphPartition::sortNodesByPart() {
+  N2Oidx.resize(graph->nvtxs);
+  O2Nidx.resize(graph->nvtxs);
+
+  for (int i = 0; i < graph->nvtxs; i++) N2Oidx[i] = i;
+  std::stable_sort(N2Oidx.begin(), N2Oidx.end(), [this](size_t i1, size_t i2) {
+    return parts[i1] < parts[i2];
+  });
+
+  for (int i = 0; i < graph->nvtxs; i++) O2Nidx[N2Oidx[i]] = i;
+
+  ngraph->xadj.resize(0);
+  ngraph->adjncy.resize(0);
   for (int i = 0; i < graph->nvtxs; i++) {
+    ngraph->xadj.push_back(ngraph->adjncy.size());
+    for (int j = graph->xadj[N2Oidx[i]]; j < graph->xadj[N2Oidx[i] + 1]; j++) {
+      ngraph->adjncy.push_back(O2Nidx[graph->adjncy[j]]);
+    }
   }
+  ngraph->nedges = graph->nedges;
+  /*
+  std::cout << "original " << std::endl;
+  graph->printGraph();
+  std::cout << "new " << std::endl;
+  ngraph->printGraph();*/
 }
 
-std::shared_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
-  SNAPFile snap_file(file_name);
-  int rc = 0;
-  index_t nvtxs;
-  index_t nedges;
-  std::shared_ptr<Graph> graph = std::make_shared<Graph>();
-
-  snap_file.getInfo(graph->nvtxs, graph->nedges);
-  graph->xadj.resize(graph->nvtxs + 1);
-  graph->adjncy.resize(graph->nedges);
-  graph->parts.resize(graph->nvtxs);
-  for (index_t i = 0; i < graph->nvtxs; i++) {
-    graph->parts[i] = -1;
-  }
-
-  snap_file.read(graph->xadj.data(), graph->adjncy.data());
-  return graph;
+void GraphPartition::partition() {
+  FixGraph();
+  parts.resize(graph->nvtxs);
+  int ncon = 1;
+  int edgecut;
+  // std::cout << *(&ngraph->nvtxs) << "!!!" << std::endl;
+  // ngraph->printGraph();
+  METIS_PartGraphRecursive(&ngraph->nvtxs, &ncon, ngraph->xadj.data(),
+                           ngraph->adjncy.data(), ngraph->vwgt.data(), NULL,
+                           NULL, &nparts, NULL, NULL, NULL, &edgecut,
+                           parts.data());
+  // printPartition();
 }
 
-void Graph::printPartition() {
-  std::vector<index_t> partition(nvtxs, 0);
-  int part = 0;
-  for (int i = 0; i < nvtxs; i++) {
-    partition[parts[i]] += adjncy[xadj[i + 1] - xadj[i]];
-    part = std::max(part, parts[i]);
+void GraphPartition::printPartition() {
+  std::cout << "Partition" << std::endl;
+  std::vector<index_t> partition(nparts, 0);
+  for (int i = 0; i < graph->nvtxs; i++) {
+    std::cout << parts[i] << ' ';
+    partition[parts[i]] += graph->xadj[i + 1] - graph->xadj[i];
   }
-  for (int i = 0; i < part; i++) {
+  std::cout << std::endl;
+  for (int i = 0; i < nparts; i++) {
     std::cout << partition[i] << ' ';
   }
   std::cout << std::endl;
