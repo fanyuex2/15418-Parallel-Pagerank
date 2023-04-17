@@ -17,8 +17,6 @@ stdint.h
 -
 graph/TextFile.hpp
 ../include/graph/graph/TextFile.hpp
-metis/mtmetis.h
-../include/graph/metis/mtmetis.h
 
 ../include/graph/TextFile.hpp
 fstream
@@ -29,14 +27,6 @@ vector
 -
 Exception.hpp
 ../include/graph/Exception.hpp
-
-../include/metis/mtmetis.h
-float.h
--
-stdint.h
--
-unistd.h
--
 
 /jet/home/xiaf/pagerank/src/graph/SNAPFile.cpp
 graph/SNAPFile.hpp

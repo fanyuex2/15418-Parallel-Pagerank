@@ -5,7 +5,6 @@ src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o
  ../include/Exception.hpp
  ../include/graph/SNAPFile.hpp
  ../include/graph/TextFile.hpp
- ../include/metis/mtmetis.h
  /jet/home/xiaf/pagerank/src/graph/SNAPFile.cpp
 src/graph/CMakeFiles/SnapFile.dir/TextFile.cpp.o
  ../include/Exception.hpp

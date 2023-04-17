@@ -136,6 +136,33 @@ SnapFile/fast:
 	$(MAKE) -f src/graph/CMakeFiles/SnapFile.dir/build.make src/graph/CMakeFiles/SnapFile.dir/build
 .PHONY : SnapFile/fast
 
+src/graph_partition.o: src/graph_partition.cpp.o
+
+.PHONY : src/graph_partition.o
+
+# target to build an object file
+src/graph_partition.cpp.o:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o
+.PHONY : src/graph_partition.cpp.o
+
+src/graph_partition.i: src/graph_partition.cpp.i
+
+.PHONY : src/graph_partition.i
+
+# target to preprocess a source file
+src/graph_partition.cpp.i:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.i
+.PHONY : src/graph_partition.cpp.i
+
+src/graph_partition.s: src/graph_partition.cpp.s
+
+.PHONY : src/graph_partition.s
+
+# target to generate assembly for a file
+src/graph_partition.cpp.s:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.s
+.PHONY : src/graph_partition.cpp.s
+
 src/mtmetis-test.o: src/mtmetis-test.cpp.o
 
 .PHONY : src/mtmetis-test.o
@@ -200,6 +227,9 @@ help:
 	@echo "... mtmetis-test"
 	@echo "... edit_cache"
 	@echo "... SnapFile"
+	@echo "... src/graph_partition.o"
+	@echo "... src/graph_partition.i"
+	@echo "... src/graph_partition.s"
 	@echo "... src/mtmetis-test.o"
 	@echo "... src/mtmetis-test.i"
 	@echo "... src/mtmetis-test.s"

@@ -13,6 +13,8 @@ stdexcept
 -
 
 ../include/common.h
+iostream
+-
 memory
 -
 string
@@ -25,8 +27,6 @@ stdint.h
 -
 graph/TextFile.hpp
 ../include/graph/graph/TextFile.hpp
-metis/mtmetis.h
-../include/graph/metis/mtmetis.h
 
 ../include/graph/TextFile.hpp
 fstream
@@ -38,19 +38,15 @@ vector
 Exception.hpp
 ../include/graph/Exception.hpp
 
-../include/graph/metis_graph.h
+../include/graph/graph.h
 common.h
 ../include/graph/common.h
 graph/SNAPFile.hpp
 ../include/graph/graph/SNAPFile.hpp
 
-../include/metis/mtmetis.h
-float.h
--
-stdint.h
--
-unistd.h
--
+../include/graph_partition.h
+graph/graph.h
+../include/graph/graph.h
 
 ../include/metis/wildriver.h
 stdint.h
@@ -58,9 +54,65 @@ stdint.h
 stdlib.h
 -
 
+/jet/home/xiaf/build/include/gk_defs.h
+
+/jet/home/xiaf/build/include/gk_macros.h
+
+/jet/home/xiaf/build/include/gk_mkblas.h
+
+/jet/home/xiaf/build/include/gk_mkmemory.h
+
+/jet/home/xiaf/build/include/gk_mkpqueue.h
+
+/jet/home/xiaf/build/include/gk_mkrandom.h
+
+/jet/home/xiaf/build/include/gk_mksort.h
+
+/jet/home/xiaf/build/include/gk_proto.h
+gk_struct.h
+/jet/home/xiaf/build/include/gk_struct.h
+
+/jet/home/xiaf/build/include/gk_struct.h
+gk_types.h
+/jet/home/xiaf/build/include/gk_types.h
+
+/jet/home/xiaf/build/include/gk_types.h
+
+/jet/home/xiaf/build/include/metis.h
+limits.h
+-
+inttypes.h
+-
+
+/jet/home/xiaf/pagerank/src/graph_partition.cpp
+graph_partition.h
+/jet/home/xiaf/pagerank/src/graph_partition.h
+cassert
+-
+iostream
+-
+gk_defs.h
+/jet/home/xiaf/pagerank/src/gk_defs.h
+gk_macros.h
+/jet/home/xiaf/pagerank/src/gk_macros.h
+gk_mkblas.h
+/jet/home/xiaf/pagerank/src/gk_mkblas.h
+gk_mkmemory.h
+/jet/home/xiaf/pagerank/src/gk_mkmemory.h
+gk_mkpqueue.h
+/jet/home/xiaf/pagerank/src/gk_mkpqueue.h
+gk_mkrandom.h
+/jet/home/xiaf/pagerank/src/gk_mkrandom.h
+gk_mksort.h
+/jet/home/xiaf/pagerank/src/gk_mksort.h
+gk_proto.h
+/jet/home/xiaf/pagerank/src/gk_proto.h
+metis.h
+/jet/home/xiaf/pagerank/src/metis.h
+
 /jet/home/xiaf/pagerank/src/mtmetis-test.cpp
-metis/mtmetis.h
-/jet/home/xiaf/pagerank/src/metis/mtmetis.h
+metis.h
+-
 stdio.h
 -
 cstddef
@@ -71,8 +123,10 @@ iostream
 -
 vector
 -
-graph/metis_graph.h
-/jet/home/xiaf/pagerank/src/graph/metis_graph.h
+graph/graph.h
+/jet/home/xiaf/pagerank/src/graph/graph.h
+graph_partition.h
+/jet/home/xiaf/pagerank/src/graph_partition.h
 metis/wildriver.h
 /jet/home/xiaf/pagerank/src/metis/wildriver.h
 

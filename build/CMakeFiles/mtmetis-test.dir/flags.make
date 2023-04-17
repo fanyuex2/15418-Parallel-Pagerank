@@ -6,5 +6,5 @@ CXX_FLAGS =   -fopenmp
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/jet/home/xiaf/pagerank/include 
+CXX_INCLUDES = -I/jet/home/xiaf/pagerank/include -I/jet/home/xiaf/build/include 
 

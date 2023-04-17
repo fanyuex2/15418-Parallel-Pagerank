@@ -4,7 +4,6 @@
 src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o: ../include/Exception.hpp
 src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o: ../include/graph/SNAPFile.hpp
 src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o: ../include/graph/TextFile.hpp
-src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o: ../include/metis/mtmetis.h
 src/graph/CMakeFiles/SnapFile.dir/SNAPFile.cpp.o: ../src/graph/SNAPFile.cpp
 
 src/graph/CMakeFiles/SnapFile.dir/TextFile.cpp.o: ../include/Exception.hpp

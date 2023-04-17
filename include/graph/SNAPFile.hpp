@@ -11,7 +11,6 @@
 #include <stdint.h>
 
 #include "graph/TextFile.hpp"
-#include "metis/mtmetis.h"
 
 /**
  * @brief A class for reading and writing files in the SNAP graph text format.
@@ -59,8 +58,7 @@ class SNAPFile {
    * @param xadj The adjacency list pointer (length nvtxs+1).
    * @param adjncy The adjacency list (length nedges).
    */
-  virtual void read(mtmetis_adj_type* xadj, mtmetis_vtx_type* adjncy,
-                    mtmetis_adj_type* out_edges);
+  virtual void read(int* xadj, int* adjncy);
 
   /**
    * @brief Get information about the graph.
@@ -70,7 +68,7 @@ class SNAPFile {
    * @param nvwgt The number of vertex weights (constraints).
    * @param ewgts Whether or not edge weights are specified.
    */
-  virtual void getInfo(mtmetis_vtx_type& nvtxs, mtmetis_adj_type& nedges);
+  virtual void getInfo(int& nvtxs, int& nedges);
 
  private:
   /**
@@ -81,12 +79,12 @@ class SNAPFile {
   /**
    * @brief The number of vertices in the graph.
    */
-  mtmetis_vtx_type m_numVertices;
+  int m_numVertices;
 
   /**
    * @brief The number of non-zeros in the matrix.
    */
-  mtmetis_adj_type m_numEdges;
+  int m_numEdges;
 
   /**
    * @brief Whether or not the graph file stores edge weights.
