@@ -14,19 +14,40 @@
 #include "gk_proto.h"
 #include "metis.h"
 
-std::unique_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
+std::shared_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
   SNAPFile snap_file(file_name);
   int rc = 0;
   index_t nvtxs;
   index_t nedges;
-  std::unique_ptr<Graph> graph = std::make_unique<Graph>();
+  std::shared_ptr<Graph> graph = std::make_shared<Graph>();
 
   snap_file.getInfo(graph->nvtxs, graph->nedges);
   graph->xadj.resize(graph->nvtxs + 1);
   graph->adjncy.resize(graph->nedges);
 
   snap_file.read(graph->xadj.data(), graph->adjncy.data());
+  graph->outgoingSize();
   return graph;
+}
+
+void Graph::outgoingSize() {
+  outgoing_sizes.resize(nvtxs, 0);
+  for (int i = 0; i < nvtxs; i++) {
+    for (int j = xadj[i]; j < xadj[i + 1]; j++) {
+      outgoing_sizes[adjncy[j]]++;
+    }
+  }
+}
+
+void Graph::printGraph() {
+  for (int i = 0; i < nvtxs; i++) {
+    std::cout << i << ": ";
+    for (int j = xadj[i]; j < xadj[i + 1]; j++) {
+      std::cout << adjncy[j] << ' ';
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
 }
 
 /*----------------Functions for graph_partition.h------------------------*/
@@ -140,7 +161,16 @@ void GraphPartition::sortNodesByPart() {
     return parts[i1] < parts[i2];
   });
 
-  for (int i = 0; i < graph->nvtxs; i++) O2Nidx[N2Oidx[i]] = i;
+  // split information will be stored in the parts field of ngraph
+  nodeidx.resize(nparts + 1, 0);
+  for (int i = 0; i < graph->nvtxs; i++) {
+    O2Nidx[N2Oidx[i]] = i;
+    nodeidx[parts[i] + 1]++;
+  }
+
+  for (int i = 1; i <= nparts; i++) {
+    nodeidx[i] = nodeidx[i] + nodeidx[i - 1];
+  }
 
   ngraph->xadj.resize(0);
   ngraph->adjncy.resize(0);
@@ -150,12 +180,14 @@ void GraphPartition::sortNodesByPart() {
       ngraph->adjncy.push_back(O2Nidx[graph->adjncy[j]]);
     }
   }
+  ngraph->xadj.push_back(ngraph->adjncy.size());
   ngraph->nedges = graph->nedges;
   /*
   std::cout << "original " << std::endl;
   graph->printGraph();
   std::cout << "new " << std::endl;
   ngraph->printGraph();*/
+  std::cout << parts[1] << std::endl;
 }
 
 void GraphPartition::partition() {
@@ -170,6 +202,11 @@ void GraphPartition::partition() {
                            NULL, &nparts, NULL, NULL, NULL, &edgecut,
                            parts.data());
   // printPartition();
+}
+
+void GraphPartition::newGraphByPart() {
+  partition();
+  sortNodesByPart();
 }
 
 void GraphPartition::printPartition() {

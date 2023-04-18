@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/jet/home/xiaf/pagerank/src/graph_partition.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o"
   "/jet/home/xiaf/pagerank/src/mtmetis-test.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o"
-  "/jet/home/xiaf/pagerank/src/parallel-pagerank.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o"
+  "/jet/home/xiaf/pagerank/src/page_rank.cpp" "/jet/home/xiaf/pagerank/build/CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

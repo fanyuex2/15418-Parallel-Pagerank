@@ -83,31 +83,31 @@ CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /jet/home/xiaf/pagerank/src/mtmetis-test.cpp -o CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s
 
-CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o: CMakeFiles/mtmetis-test.dir/flags.make
-CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o: ../src/parallel-pagerank.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/jet/home/xiaf/pagerank/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o -c /jet/home/xiaf/pagerank/src/parallel-pagerank.cpp
+CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o: CMakeFiles/mtmetis-test.dir/flags.make
+CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o: ../src/page_rank.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/jet/home/xiaf/pagerank/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o -c /jet/home/xiaf/pagerank/src/page_rank.cpp
 
-CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /jet/home/xiaf/pagerank/src/parallel-pagerank.cpp > CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.i
+CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /jet/home/xiaf/pagerank/src/page_rank.cpp > CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.i
 
-CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /jet/home/xiaf/pagerank/src/parallel-pagerank.cpp -o CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.s
+CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /jet/home/xiaf/pagerank/src/page_rank.cpp -o CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.s
 
 # Object files for target mtmetis-test
 mtmetis__test_OBJECTS = \
 "CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o" \
 "CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o" \
-"CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o"
+"CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o"
 
 # External object files for target mtmetis-test
 mtmetis__test_EXTERNAL_OBJECTS =
 
 mtmetis-test: CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o
 mtmetis-test: CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o
-mtmetis-test: CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o
+mtmetis-test: CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o
 mtmetis-test: CMakeFiles/mtmetis-test.dir/build.make
 mtmetis-test: /jet/home/xiaf/build/lib/libmetis.a
 mtmetis-test: src/graph/libSnapFile.a

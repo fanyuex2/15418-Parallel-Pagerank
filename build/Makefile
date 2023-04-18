@@ -190,32 +190,32 @@ src/mtmetis-test.cpp.s:
 	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s
 .PHONY : src/mtmetis-test.cpp.s
 
-src/parallel-pagerank.o: src/parallel-pagerank.cpp.o
+src/page_rank.o: src/page_rank.cpp.o
 
-.PHONY : src/parallel-pagerank.o
+.PHONY : src/page_rank.o
 
 # target to build an object file
-src/parallel-pagerank.cpp.o:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o
-.PHONY : src/parallel-pagerank.cpp.o
+src/page_rank.cpp.o:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o
+.PHONY : src/page_rank.cpp.o
 
-src/parallel-pagerank.i: src/parallel-pagerank.cpp.i
+src/page_rank.i: src/page_rank.cpp.i
 
-.PHONY : src/parallel-pagerank.i
+.PHONY : src/page_rank.i
 
 # target to preprocess a source file
-src/parallel-pagerank.cpp.i:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.i
-.PHONY : src/parallel-pagerank.cpp.i
+src/page_rank.cpp.i:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.i
+.PHONY : src/page_rank.cpp.i
 
-src/parallel-pagerank.s: src/parallel-pagerank.cpp.s
+src/page_rank.s: src/page_rank.cpp.s
 
-.PHONY : src/parallel-pagerank.s
+.PHONY : src/page_rank.s
 
 # target to generate assembly for a file
-src/parallel-pagerank.cpp.s:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.s
-.PHONY : src/parallel-pagerank.cpp.s
+src/page_rank.cpp.s:
+	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.s
+.PHONY : src/page_rank.cpp.s
 
 # Help Target
 help:
@@ -233,9 +233,9 @@ help:
 	@echo "... src/mtmetis-test.o"
 	@echo "... src/mtmetis-test.i"
 	@echo "... src/mtmetis-test.s"
-	@echo "... src/parallel-pagerank.o"
-	@echo "... src/parallel-pagerank.i"
-	@echo "... src/parallel-pagerank.s"
+	@echo "... src/page_rank.o"
+	@echo "... src/page_rank.i"
+	@echo "... src/page_rank.s"
 .PHONY : help
 
 

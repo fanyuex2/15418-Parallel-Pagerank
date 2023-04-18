@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <stdio.h>
 
 #include <cstddef>
@@ -5,11 +6,27 @@
 #include <iostream>
 #include <vector>
 
-#include "graph/graph.h"
+#include "graph.h"
 #include "graph_partition.h"
 #include "metis/wildriver.h"
+#include "page_rank.h"
 
 using namespace std;
+#define PageRankDampening 0.3d
+#define PageRankConvergence 1e-9d
+#define EPSILON 0.00000000001
+#define THREADNUM 2
+
+bool compareApprox(double *ref, double *stu, int nvtxs) {
+  for (int i = 0; i < nvtxs; i++) {
+    if (fabs(ref[i] - stu[i]) > EPSILON) {
+      std::cerr << "*** Results disagree at " << i << " expected " << ref[i]
+                << " found " << stu[i] << std::endl;
+      return false;
+    }
+  }
+  return true;
+}
 
 int main();
 void partition(int nvtxs, const int *xadj, const int *adjncy, int *where);
@@ -18,14 +35,25 @@ void partition(int nvtxs, const int *xadj, const int *adjncy, int *where);
 
 int main() {
   // wildriver_graph_handle * handle;
-  std::unique_ptr<Graph> graph =
+
+  omp_set_num_threads(THREADNUM);
+  std::shared_ptr<Graph> graph =
       Graph::createMetisGraph("../test/hollins.snap");
-  std::unique_ptr<GraphPartition> par =
-      std::make_unique<GraphPartition>(std::move(graph), 128);
-  par->partition();
-  par->sortNodesByPart();
-  // partition(graph->nvtxs, graph->xadj.data(),
-  // graph->adjncy.data(),graph->parts.data());
+
+  std::unique_ptr<GraphPartition> partition =
+      std::make_unique<GraphPartition>(graph, 2);
+  partition->newGraphByPart();
+
+
+  std::unique_ptr<PageRank> par = std::make_unique<PageRank>(
+      graph, PageRankDampening, PageRankConvergence, 500);
+  std::vector<double> *vec_1 = new std::vector<double>(graph->nvtxs, 0.0);
+  std::cout << par->dynamicPageRank(vec_1) << std::endl;
+
+  std::vector<double> *vec_2 = new std::vector<double>(graph->nvtxs, 0.0);
+  std::cout << par->partitionPageRank(vec_2,THREADNUM) << std::endl;
+
+  assert(compareApprox((*vec_1).data(), (*vec_2).data(), graph->nvtxs));
   return 0;
 }
 

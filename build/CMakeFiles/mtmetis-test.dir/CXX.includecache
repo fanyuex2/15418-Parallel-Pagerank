@@ -6,6 +6,30 @@
 
 #IncludeRegexTransform: 
 
+../include/CycleTimer.h
+sys/sysctl.h
+-
+mach/mach.h
+-
+mach/mach_time.h
+-
+stdio.h
+-
+stdlib.h
+-
+time.h
+-
+windows.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+sys/time.h
+-
+
 ../include/Exception.hpp
 string
 -
@@ -13,6 +37,12 @@ stdexcept
 -
 
 ../include/common.h
+algorithm
+-
+cassert
+-
+cmath
+-
 iostream
 -
 memory
@@ -21,6 +51,12 @@ string
 -
 vector
 -
+
+../include/graph.h
+common.h
+../include/common.h
+graph/SNAPFile.hpp
+../include/graph/SNAPFile.hpp
 
 ../include/graph/SNAPFile.hpp
 stdint.h
@@ -38,21 +74,21 @@ vector
 Exception.hpp
 ../include/graph/Exception.hpp
 
-../include/graph/graph.h
-common.h
-../include/graph/common.h
-graph/SNAPFile.hpp
-../include/graph/graph/SNAPFile.hpp
-
 ../include/graph_partition.h
-graph/graph.h
-../include/graph/graph.h
+graph.h
+../include/graph.h
 
 ../include/metis/wildriver.h
 stdint.h
 -
 stdlib.h
 -
+
+../include/page_rank.h
+common.h
+../include/common.h
+graph.h
+../include/graph.h
 
 /jet/home/xiaf/build/include/gk_defs.h
 
@@ -113,6 +149,8 @@ metis.h
 /jet/home/xiaf/pagerank/src/metis.h
 
 /jet/home/xiaf/pagerank/src/mtmetis-test.cpp
+omp.h
+-
 stdio.h
 -
 cstddef
@@ -123,14 +161,32 @@ iostream
 -
 vector
 -
-graph/graph.h
-/jet/home/xiaf/pagerank/src/graph/graph.h
+graph.h
+/jet/home/xiaf/pagerank/src/graph.h
 graph_partition.h
 /jet/home/xiaf/pagerank/src/graph_partition.h
 metis/wildriver.h
 /jet/home/xiaf/pagerank/src/metis/wildriver.h
+page_rank.h
+/jet/home/xiaf/pagerank/src/page_rank.h
 
-/jet/home/xiaf/pagerank/src/parallel-pagerank.cpp
-stdint.h
+/jet/home/xiaf/pagerank/src/page_rank.cpp
+page_rank.h
+/jet/home/xiaf/pagerank/src/page_rank.h
+omp.h
 -
+stdlib.h
+-
+cmath
+-
+iostream
+-
+utility
+-
+CycleTimer.h
+/jet/home/xiaf/pagerank/src/CycleTimer.h
+graph.h
+/jet/home/xiaf/pagerank/src/graph.h
+graph_partition.h
+/jet/home/xiaf/pagerank/src/graph_partition.h
 

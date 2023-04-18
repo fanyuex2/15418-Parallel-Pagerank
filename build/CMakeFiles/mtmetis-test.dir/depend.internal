@@ -4,9 +4,9 @@
 CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o
  ../include/Exception.hpp
  ../include/common.h
+ ../include/graph.h
  ../include/graph/SNAPFile.hpp
  ../include/graph/TextFile.hpp
- ../include/graph/graph.h
  ../include/graph_partition.h
  /jet/home/xiaf/build/include/gk_defs.h
  /jet/home/xiaf/build/include/gk_macros.h
@@ -23,11 +23,20 @@ CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o
 CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o
  ../include/Exception.hpp
  ../include/common.h
+ ../include/graph.h
  ../include/graph/SNAPFile.hpp
  ../include/graph/TextFile.hpp
- ../include/graph/graph.h
  ../include/graph_partition.h
  ../include/metis/wildriver.h
+ ../include/page_rank.h
  /jet/home/xiaf/pagerank/src/mtmetis-test.cpp
-CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o
- /jet/home/xiaf/pagerank/src/parallel-pagerank.cpp
+CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o
+ ../include/CycleTimer.h
+ ../include/Exception.hpp
+ ../include/common.h
+ ../include/graph.h
+ ../include/graph/SNAPFile.hpp
+ ../include/graph/TextFile.hpp
+ ../include/graph_partition.h
+ ../include/page_rank.h
+ /jet/home/xiaf/pagerank/src/page_rank.cpp
