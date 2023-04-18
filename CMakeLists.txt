@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mtmetis-test)
+project(pagerank)
 
 add_library(GKlib SHARED IMPORTED)
 set_property(TARGET GKlib PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/build/lib/libGKlib.a")
@@ -12,9 +12,9 @@ file(GLOB SOURCES "src/*.cpp")
 
 add_subdirectory(src/graph)
 
-add_executable(mtmetis-test ${SOURCES})
+add_executable(pagerank ${SOURCES})
 
-target_include_directories(mtmetis-test
+target_include_directories(pagerank
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         /jet/home/xiaf/build/include

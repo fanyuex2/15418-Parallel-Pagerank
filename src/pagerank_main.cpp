@@ -15,7 +15,7 @@ using namespace std;
 #define PageRankDampening 0.3d
 #define PageRankConvergence 1e-9d
 #define EPSILON 0.00000000001
-#define THREADNUM 2
+#define THREADNUM 64
 
 bool compareApprox(double *ref, double *stu, int nvtxs) {
   for (int i = 0; i < nvtxs; i++) {

@@ -187,7 +187,6 @@ void GraphPartition::sortNodesByPart() {
   graph->printGraph();
   std::cout << "new " << std::endl;
   ngraph->printGraph();*/
-  std::cout << parts[1] << std::endl;
 }
 
 void GraphPartition::partition() {

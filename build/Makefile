@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named mtmetis-test
+# Target rules for targets named pagerank
 
 # Build rule for target.
-mtmetis-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mtmetis-test
-.PHONY : mtmetis-test
+pagerank: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pagerank
+.PHONY : pagerank
 
 # fast build rule for target.
-mtmetis-test/fast:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/build
-.PHONY : mtmetis-test/fast
+pagerank/fast:
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/build
+.PHONY : pagerank/fast
 
 #=============================================================================
 # Target rules for targets named SnapFile
@@ -142,7 +142,7 @@ src/graph_partition.o: src/graph_partition.cpp.o
 
 # target to build an object file
 src/graph_partition.cpp.o:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.o
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/graph_partition.cpp.o
 .PHONY : src/graph_partition.cpp.o
 
 src/graph_partition.i: src/graph_partition.cpp.i
@@ -151,7 +151,7 @@ src/graph_partition.i: src/graph_partition.cpp.i
 
 # target to preprocess a source file
 src/graph_partition.cpp.i:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.i
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/graph_partition.cpp.i
 .PHONY : src/graph_partition.cpp.i
 
 src/graph_partition.s: src/graph_partition.cpp.s
@@ -160,35 +160,8 @@ src/graph_partition.s: src/graph_partition.cpp.s
 
 # target to generate assembly for a file
 src/graph_partition.cpp.s:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/graph_partition.cpp.s
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/graph_partition.cpp.s
 .PHONY : src/graph_partition.cpp.s
-
-src/mtmetis-test.o: src/mtmetis-test.cpp.o
-
-.PHONY : src/mtmetis-test.o
-
-# target to build an object file
-src/mtmetis-test.cpp.o:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o
-.PHONY : src/mtmetis-test.cpp.o
-
-src/mtmetis-test.i: src/mtmetis-test.cpp.i
-
-.PHONY : src/mtmetis-test.i
-
-# target to preprocess a source file
-src/mtmetis-test.cpp.i:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.i
-.PHONY : src/mtmetis-test.cpp.i
-
-src/mtmetis-test.s: src/mtmetis-test.cpp.s
-
-.PHONY : src/mtmetis-test.s
-
-# target to generate assembly for a file
-src/mtmetis-test.cpp.s:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.s
-.PHONY : src/mtmetis-test.cpp.s
 
 src/page_rank.o: src/page_rank.cpp.o
 
@@ -196,7 +169,7 @@ src/page_rank.o: src/page_rank.cpp.o
 
 # target to build an object file
 src/page_rank.cpp.o:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.o
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/page_rank.cpp.o
 .PHONY : src/page_rank.cpp.o
 
 src/page_rank.i: src/page_rank.cpp.i
@@ -205,7 +178,7 @@ src/page_rank.i: src/page_rank.cpp.i
 
 # target to preprocess a source file
 src/page_rank.cpp.i:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.i
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/page_rank.cpp.i
 .PHONY : src/page_rank.cpp.i
 
 src/page_rank.s: src/page_rank.cpp.s
@@ -214,8 +187,35 @@ src/page_rank.s: src/page_rank.cpp.s
 
 # target to generate assembly for a file
 src/page_rank.cpp.s:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/src/page_rank.cpp.s
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/page_rank.cpp.s
 .PHONY : src/page_rank.cpp.s
+
+src/pagerank_main.o: src/pagerank_main.cpp.o
+
+.PHONY : src/pagerank_main.o
+
+# target to build an object file
+src/pagerank_main.cpp.o:
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/pagerank_main.cpp.o
+.PHONY : src/pagerank_main.cpp.o
+
+src/pagerank_main.i: src/pagerank_main.cpp.i
+
+.PHONY : src/pagerank_main.i
+
+# target to preprocess a source file
+src/pagerank_main.cpp.i:
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/pagerank_main.cpp.i
+.PHONY : src/pagerank_main.cpp.i
+
+src/pagerank_main.s: src/pagerank_main.cpp.s
+
+.PHONY : src/pagerank_main.s
+
+# target to generate assembly for a file
+src/pagerank_main.cpp.s:
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/src/pagerank_main.cpp.s
+.PHONY : src/pagerank_main.cpp.s
 
 # Help Target
 help:
@@ -224,18 +224,18 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... mtmetis-test"
+	@echo "... pagerank"
 	@echo "... edit_cache"
 	@echo "... SnapFile"
 	@echo "... src/graph_partition.o"
 	@echo "... src/graph_partition.i"
 	@echo "... src/graph_partition.s"
-	@echo "... src/mtmetis-test.o"
-	@echo "... src/mtmetis-test.i"
-	@echo "... src/mtmetis-test.s"
 	@echo "... src/page_rank.o"
 	@echo "... src/page_rank.i"
 	@echo "... src/page_rank.s"
+	@echo "... src/pagerank_main.o"
+	@echo "... src/pagerank_main.i"
+	@echo "... src/pagerank_main.s"
 .PHONY : help
 
 

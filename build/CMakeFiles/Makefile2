@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /jet/home/xiaf/pagerank
 CMAKE_BINARY_DIR = /jet/home/xiaf/pagerank/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/mtmetis-test.dir
+# Target rules for target CMakeFiles/pagerank.dir
 
 # All Build rule for target.
-CMakeFiles/mtmetis-test.dir/all: src/graph/CMakeFiles/SnapFile.dir/all
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/depend
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/jet/home/xiaf/pagerank/build/CMakeFiles --progress-num=4,5,6,7 "Built target mtmetis-test"
-.PHONY : CMakeFiles/mtmetis-test.dir/all
+CMakeFiles/pagerank.dir/all: src/graph/CMakeFiles/SnapFile.dir/all
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/depend
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/jet/home/xiaf/pagerank/build/CMakeFiles --progress-num=4,5,6,7 "Built target pagerank"
+.PHONY : CMakeFiles/pagerank.dir/all
 
 # Include target in all.
-all: CMakeFiles/mtmetis-test.dir/all
+all: CMakeFiles/pagerank.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/mtmetis-test.dir/rule: cmake_check_build_system
+CMakeFiles/pagerank.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /jet/home/xiaf/pagerank/build/CMakeFiles 7
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mtmetis-test.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/pagerank.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /jet/home/xiaf/pagerank/build/CMakeFiles 0
-.PHONY : CMakeFiles/mtmetis-test.dir/rule
+.PHONY : CMakeFiles/pagerank.dir/rule
 
 # Convenience name for target.
-mtmetis-test: CMakeFiles/mtmetis-test.dir/rule
+pagerank: CMakeFiles/pagerank.dir/rule
 
-.PHONY : mtmetis-test
-
-# clean rule for target.
-CMakeFiles/mtmetis-test.dir/clean:
-	$(MAKE) -f CMakeFiles/mtmetis-test.dir/build.make CMakeFiles/mtmetis-test.dir/clean
-.PHONY : CMakeFiles/mtmetis-test.dir/clean
+.PHONY : pagerank
 
 # clean rule for target.
-clean: CMakeFiles/mtmetis-test.dir/clean
+CMakeFiles/pagerank.dir/clean:
+	$(MAKE) -f CMakeFiles/pagerank.dir/build.make CMakeFiles/pagerank.dir/clean
+.PHONY : CMakeFiles/pagerank.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/pagerank.dir/clean
 
 .PHONY : clean
 
