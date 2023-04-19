@@ -216,18 +216,17 @@ void GraphPartition::partition() {
   }
   mtmetis_pid_type mt_nparts = nparts;
 
-
   std::vector<mtmetis_pid_type> *mt_parts =
       new std::vector<mtmetis_pid_type>(parts.size());
 
   double *opts = mtmetis_init_options();
   opts[MTMETIS_OPTION_NTHREADS] = nparts;
-  MTMETIS_PartGraphRecursive(&mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(),
-                             mt_vwgt->data(), NULL, NULL, &mt_nparts, NULL, NULL,
-                             opts, &edgecut, mt_parts->data());
+  MTMETIS_PartGraphRecursive(
+      &mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(), mt_vwgt->data(),
+      NULL, NULL, &mt_nparts, NULL, NULL, opts, &edgecut, mt_parts->data());
 
   for (int i = 0; i < parts.size(); i++) {
-    parts[i]=(int)((*mt_parts)[i]);
+    parts[i] = (int)((*mt_parts)[i]);
   }
 
   delete mt_xadj;
@@ -245,15 +244,26 @@ void GraphPartition::newFromStatic() {
   std::vector<index_t> partition(nparts, 0);
   parts.resize(graph->nvtxs);
 
+  std::vector<index_t> *index = new std::vector<index_t>(graph->nvtxs);
   for (int i = 0; i < graph->nvtxs; i++) {
-    int index = 0;
+    (*index)[i] = i;
+  }
+  std::stable_sort((*index).begin(), (*index).end(),
+                   [this](size_t i1, size_t i2) {
+                     return (graph->xadj[i1 + 1] - graph->xadj[i1]) >
+                            (graph->xadj[i2 + 1] - graph->xadj[i2]);
+                   });
+
+  for (int i = 0; i < graph->nvtxs; i++) {
+    int min_index = 0;
 
     for (int j = 1; j < nparts; j++) {
-      if (partition[j] < partition[index]) index = j;
+      if (partition[j] < partition[min_index]) min_index = j;
     }
 
-    parts[i] = index;
-    partition[index] += graph->xadj[i + 1] - graph->xadj[i];
+    parts[(*index)[i]] = min_index;
+    partition[min_index] +=
+        graph->xadj[(*index)[i] + 1] - graph->xadj[(*index)[i]];
   }
   sortNodesByPart();
 }

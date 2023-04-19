@@ -10,6 +10,7 @@
 #include "CycleTimer.h"
 #include "graph.h"
 #include "graph_partition.h"
+#define AVGITER 100
 
 double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   double start = CycleTimer::currentSeconds();
@@ -57,6 +58,14 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   return pagerank_time;
 }
 
+double PageRank::naivePageRank(std::vector<double>* score_new, int avg_iter) {
+  double pagerank_time = 0.0;
+  for (int i = 0; i < avg_iter; i++) {
+    pagerank_time += dynamicPageRank(score_new);
+  }
+  return pagerank_time / avg_iter;
+}
+
 double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
                                 std::vector<index_t>& nodeidx) {
   int nparts = nodeidx.size() - 1;
@@ -73,9 +82,6 @@ double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
   for (int i = 0; i < numNodes; ++i) {
     score_old[i] = equal_prob;
   }
-
-  // #pragma omp parallel for reduction(+: broadcastScore) schedule(dynamic,
-  // 16)
 
   while (!converged && iter < max_iter_) {
     iter++;
@@ -116,19 +122,23 @@ double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
   return pagerank_time;
 }
 
-double PageRank::partitionPageRank(std::vector<double>* score_new,
-                                   index_t nparts, bool graph_partition) {
+double PageRank::partitionPageRank(std::vector<double>* score_new, int avg_iter,
+                                   bool graph_partition) {
   std::unique_ptr<GraphPartition> partition =
-      std::make_unique<GraphPartition>(original_graph, nparts);
+      std::make_unique<GraphPartition>(original_graph, omp_get_max_threads());
 
   if (graph_partition)
-  partition->newFromPartition();
+    partition->newFromPartition();
   else
-  partition->newFromStatic();
+    partition->newFromStatic();
 
   partition->ngraph->outgoingSize();
-  double pagerank_time =
-      staticPageRank(partition->ngraph.get(), score_new, partition->nodeidx);
+
+  double pagerank_time = 0.0;
+  for (int i = 0; i < avg_iter; i++) {
+    pagerank_time +=
+        staticPageRank(partition->ngraph.get(), score_new, partition->nodeidx);
+  }
 
   /* for (int i = 0; i < original_graph->nvtxs; i++) {
      std::cout << ' ' << (*score_new)[i] << ' ' << std::endl;
@@ -139,5 +149,5 @@ double PageRank::partitionPageRank(std::vector<double>* score_new,
     score_old[partition->N2Oidx[i]] = (*score_new)[i];
   }
   std::swap((*score_new), score_old);
-  return pagerank_time;
+  return pagerank_time / avg_iter;
 }
