@@ -1,9 +1,3 @@
-<style type="text/css">
-  body{
-  font-size: 10pt;
-}
-</style>
-
 ## Input Graph
 Graph should follow below format, nodes should index from 0
 
