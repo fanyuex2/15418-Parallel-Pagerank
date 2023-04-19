@@ -15,7 +15,7 @@ class PageRank {
         max_iter_(max_iter) {
           
         }
-  double partitionPageRank(std::vector<double>* score_new, index_t nparts);
+  double partitionPageRank(std::vector<double>* score_new, index_t nparts, bool graph_partition);
   double dynamicPageRank(std::vector<double>* score_new);
 
  private:

@@ -109,7 +109,7 @@ pagerank: CMakeFiles/pagerank.dir/src/graph_partition.cpp.o
 pagerank: CMakeFiles/pagerank.dir/src/page_rank.cpp.o
 pagerank: CMakeFiles/pagerank.dir/src/pagerank_main.cpp.o
 pagerank: CMakeFiles/pagerank.dir/build.make
-pagerank: /jet/home/xiaf/build/lib/libmetis.a
+pagerank: ../lib/libmtmetis.a
 pagerank: src/graph/libSnapFile.a
 pagerank: /usr/lib/gcc/x86_64-redhat-linux/8/libgomp.so
 pagerank: /usr/lib64/libpthread.so

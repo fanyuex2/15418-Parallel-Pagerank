@@ -28,7 +28,7 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
     iter++;
     broadcastScore = 0.0;
     globalDiff = 0.0;
-  #pragma omp parallel for reduction(+ : broadcastScore) schedule(dynamic, 16)
+#pragma omp parallel for reduction(+ : broadcastScore) schedule(dynamic, 16)
     for (int i = 0; i < numNodes; ++i) {
       (*score_new)[i] = 0.0;
 
@@ -44,7 +44,7 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
       (*score_new)[i] =
           damping_ * (*score_new)[i] + (1.0 - damping_) * equal_prob;
     }
-    
+
 #pragma omp parallel for default(shared) reduction(+ : globalDiff)
     for (int i = 0; i < numNodes; ++i) {
       (*score_new)[i] += damping_ * broadcastScore * equal_prob;
@@ -57,10 +57,8 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   return pagerank_time;
 }
 
-double PageRank::staticPageRank(Graph* graph,
-                                std::vector<double>* score_new,
+double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
                                 std::vector<index_t>& nodeidx) {
-  graph->outgoingSize();
   int nparts = nodeidx.size() - 1;
 
   double start = CycleTimer::currentSeconds();
@@ -85,7 +83,6 @@ double PageRank::staticPageRank(Graph* graph,
     globalDiff = 0.0;
 #pragma omp parallel default(shared) reduction(+ : broadcastScore)
     {
-      assert(nparts == omp_get_num_threads());
       index_t start_vex = nodeidx[omp_get_thread_num()],
               end_vex = nodeidx[omp_get_thread_num() + 1];
       double localScore = 0.0;
@@ -95,11 +92,9 @@ double PageRank::staticPageRank(Graph* graph,
         if (graph->outgoing_sizes[i] == 0) {
           localScore += score_old[i];
         }
-        for (index_t v = graph->xadj[i];
-             v < graph->xadj[i + 1]; ++v) {
-          (*score_new)[i] +=
-              score_old[graph->adjncy[v]] /
-              graph->outgoing_sizes[graph->adjncy[v]];
+        for (index_t v = graph->xadj[i]; v < graph->xadj[i + 1]; ++v) {
+          (*score_new)[i] += score_old[graph->adjncy[v]] /
+                             graph->outgoing_sizes[graph->adjncy[v]];
         }
         (*score_new)[i] =
             damping_ * (*score_new)[i] + (1.0 - damping_) * equal_prob;
@@ -122,12 +117,18 @@ double PageRank::staticPageRank(Graph* graph,
 }
 
 double PageRank::partitionPageRank(std::vector<double>* score_new,
-                                   index_t nparts) {
+                                   index_t nparts, bool graph_partition) {
   std::unique_ptr<GraphPartition> partition =
       std::make_unique<GraphPartition>(original_graph, nparts);
 
-  partition->newGraphByPart();
-  double pagerank_time = staticPageRank(partition->ngraph.get(),score_new,partition->nodeidx);
+  if (graph_partition)
+  partition->newFromPartition();
+  else
+  partition->newFromStatic();
+
+  partition->ngraph->outgoingSize();
+  double pagerank_time =
+      staticPageRank(partition->ngraph.get(), score_new, partition->nodeidx);
 
   /* for (int i = 0; i < original_graph->nvtxs; i++) {
      std::cout << ' ' << (*score_new)[i] << ' ' << std::endl;

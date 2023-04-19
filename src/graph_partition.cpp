@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 
+#include "common.h"
 #include "gk_defs.h"
 #include "gk_macros.h"
 #include "gk_mkblas.h"
@@ -12,7 +13,7 @@
 #include "gk_mkrandom.h"
 #include "gk_mksort.h"
 #include "gk_proto.h"
-#include "metis.h"
+#include "mtmetis.h"
 
 std::shared_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
   SNAPFile snap_file(file_name);
@@ -155,6 +156,7 @@ void GraphPartition::FixGraph() {
 void GraphPartition::sortNodesByPart() {
   N2Oidx.resize(graph->nvtxs);
   O2Nidx.resize(graph->nvtxs);
+  ngraph->nvtxs = graph->nvtxs;
 
   for (int i = 0; i < graph->nvtxs; i++) N2Oidx[i] = i;
   std::stable_sort(N2Oidx.begin(), N2Oidx.end(), [this](size_t i1, size_t i2) {
@@ -182,29 +184,77 @@ void GraphPartition::sortNodesByPart() {
   }
   ngraph->xadj.push_back(ngraph->adjncy.size());
   ngraph->nedges = graph->nedges;
-  /*
-  std::cout << "original " << std::endl;
-  graph->printGraph();
-  std::cout << "new " << std::endl;
-  ngraph->printGraph();*/
 }
 
 void GraphPartition::partition() {
   FixGraph();
   parts.resize(graph->nvtxs);
-  int ncon = 1;
-  int edgecut;
-  // std::cout << *(&ngraph->nvtxs) << "!!!" << std::endl;
-  // ngraph->printGraph();
-  METIS_PartGraphRecursive(&ngraph->nvtxs, &ncon, ngraph->xadj.data(),
-                           ngraph->adjncy.data(), ngraph->vwgt.data(), NULL,
-                           NULL, &nparts, NULL, NULL, NULL, &edgecut,
-                           parts.data());
-  // printPartition();
+  mtmetis_vtx_type ncon = 1;
+  mtmetis_wgt_type edgecut;
+
+  typedef uint64_t mtmetis_vtx_type;
+  typedef uint64_t mtmetis_adj_type;
+  typedef int64_t mtmetis_wgt_type;
+  typedef uint64_t mtmetis_pid_type;
+  typedef double mtmetis_real_type;
+
+  mtmetis_vtx_type mt_nvtxs = ngraph->nvtxs;
+  std::vector<mtmetis_adj_type> *mt_xadj =
+      new std::vector<mtmetis_adj_type>(ngraph->xadj.size());
+  for (int i = 0; i < ngraph->xadj.size(); i++) {
+    (*mt_xadj)[i] = ngraph->xadj[i];
+  }
+  std::vector<mtmetis_vtx_type> *mt_adjncy =
+      new std::vector<mtmetis_vtx_type>(ngraph->adjncy.size());
+  for (int i = 0; i < ngraph->adjncy.size(); i++) {
+    (*mt_adjncy)[i] = ngraph->adjncy[i];
+  }
+  std::vector<mtmetis_wgt_type> *mt_vwgt =
+      new std::vector<mtmetis_wgt_type>(ngraph->vwgt.size());
+  for (int i = 0; i < ngraph->vwgt.size(); i++) {
+    (*mt_vwgt)[i] = ngraph->vwgt[i];
+  }
+  mtmetis_pid_type mt_nparts = nparts;
+
+
+  std::vector<mtmetis_pid_type> *mt_parts =
+      new std::vector<mtmetis_pid_type>(parts.size());
+
+  double *opts = mtmetis_init_options();
+  opts[MTMETIS_OPTION_NTHREADS] = nparts;
+  MTMETIS_PartGraphRecursive(&mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(),
+                             mt_vwgt->data(), NULL, NULL, &mt_nparts, NULL, NULL,
+                             opts, &edgecut, mt_parts->data());
+
+  for (int i = 0; i < parts.size(); i++) {
+    parts[i]=(int)((*mt_parts)[i]);
+  }
+
+  delete mt_xadj;
+  delete mt_adjncy;
+  delete mt_vwgt;
+  delete mt_parts;
 }
 
-void GraphPartition::newGraphByPart() {
+void GraphPartition::newFromPartition() {
   partition();
+  sortNodesByPart();
+}
+
+void GraphPartition::newFromStatic() {
+  std::vector<index_t> partition(nparts, 0);
+  parts.resize(graph->nvtxs);
+
+  for (int i = 0; i < graph->nvtxs; i++) {
+    int index = 0;
+
+    for (int j = 1; j < nparts; j++) {
+      if (partition[j] < partition[index]) index = j;
+    }
+
+    parts[i] = index;
+    partition[index] += graph->xadj[i + 1] - graph->xadj[i];
+  }
   sortNodesByPart();
 }
 

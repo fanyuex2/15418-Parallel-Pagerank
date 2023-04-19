@@ -51,6 +51,8 @@ string
 -
 vector
 -
+cstring
+-
 
 ../include/graph.h
 common.h
@@ -78,10 +80,12 @@ Exception.hpp
 graph.h
 ../include/graph.h
 
-../include/metis/wildriver.h
+../include/mtmetis.h
+float.h
+-
 stdint.h
 -
-stdlib.h
+unistd.h
 -
 
 ../include/page_rank.h
@@ -114,12 +118,6 @@ gk_types.h
 
 /jet/home/xiaf/build/include/gk_types.h
 
-/jet/home/xiaf/build/include/metis.h
-limits.h
--
-inttypes.h
--
-
 /jet/home/xiaf/pagerank/src/graph_partition.cpp
 graph_partition.h
 /jet/home/xiaf/pagerank/src/graph_partition.h
@@ -129,6 +127,8 @@ cassert
 -
 iostream
 -
+common.h
+/jet/home/xiaf/pagerank/src/common.h
 gk_defs.h
 /jet/home/xiaf/pagerank/src/gk_defs.h
 gk_macros.h
@@ -145,8 +145,8 @@ gk_mksort.h
 /jet/home/xiaf/pagerank/src/gk_mksort.h
 gk_proto.h
 /jet/home/xiaf/pagerank/src/gk_proto.h
-metis.h
-/jet/home/xiaf/pagerank/src/metis.h
+mtmetis.h
+/jet/home/xiaf/pagerank/src/mtmetis.h
 
 /jet/home/xiaf/pagerank/src/page_rank.cpp
 page_rank.h
@@ -185,8 +185,6 @@ graph.h
 /jet/home/xiaf/pagerank/src/graph.h
 graph_partition.h
 /jet/home/xiaf/pagerank/src/graph_partition.h
-metis/wildriver.h
-/jet/home/xiaf/pagerank/src/metis/wildriver.h
 page_rank.h
 /jet/home/xiaf/pagerank/src/page_rank.h
 

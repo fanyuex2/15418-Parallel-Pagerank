@@ -6,7 +6,8 @@ class GraphPartition {
  public:
   GraphPartition(std::shared_ptr<Graph> g, uint64_t num_parts = 64)
       : graph(g), ngraph(std::make_unique<Graph>()), nparts(num_parts) {}
-  void newGraphByPart();
+  void newFromPartition();
+  void newFromStatic();
   void printPartition();
 
   std::unique_ptr<Graph> ngraph;

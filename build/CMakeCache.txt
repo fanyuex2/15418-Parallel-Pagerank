@@ -216,12 +216,6 @@ OpenMP_pthread_LIBRARY:FILEPATH=/usr/lib64/libpthread.so
 SnapFile_LIB_DEPENDS:STATIC=
 
 //Value Computed by CMake
-mtmetis-test_BINARY_DIR:STATIC=/jet/home/xiaf/pagerank/build
-
-//Value Computed by CMake
-mtmetis-test_SOURCE_DIR:STATIC=/jet/home/xiaf/pagerank
-
-//Value Computed by CMake
 pagerank_BINARY_DIR:STATIC=/jet/home/xiaf/pagerank/build
 
 //Value Computed by CMake

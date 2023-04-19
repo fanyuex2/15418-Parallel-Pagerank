@@ -4,9 +4,9 @@ project(pagerank)
 add_library(GKlib SHARED IMPORTED)
 set_property(TARGET GKlib PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/build/lib/libGKlib.a")
 
-add_library(metis SHARED IMPORTED)
-set_property(TARGET metis PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/build/lib/libmetis.a")
-target_link_libraries(metis INTERFACE GKlib)
+add_library(mtmetis SHARED IMPORTED)
+set_property(TARGET mtmetis PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/pagerank/lib/libmtmetis.a")
+target_link_libraries(mtmetis INTERFACE GKlib)
 
 file(GLOB SOURCES "src/*.cpp")
 
@@ -22,4 +22,4 @@ target_include_directories(pagerank
 
 find_package(OpenMP REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX GKlib metis SnapFile) 
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX GKlib mtmetis SnapFile) 

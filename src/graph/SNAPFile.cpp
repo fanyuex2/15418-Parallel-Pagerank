@@ -90,13 +90,13 @@ std::vector<edge_struct> readEdges(TextFile* file, index_t const numEdges = 0) {
       edge_struct edge{0, 0};
       char* eptr = (char*)line.data();
       char* sptr = eptr;
-      edge.dst = static_cast<index_t>(std::strtoull(sptr, &eptr, 10)) - 1;
+      edge.dst = static_cast<index_t>(std::strtoull(sptr, &eptr, 10));
       if (eptr == sptr) {
         throw BadFileException("Unable to parse line: '" + line + "'");
       }
 
       sptr = eptr;
-      edge.src = static_cast<index_t>(std::strtoull(sptr, &eptr, 10)) - 1;
+      edge.src = static_cast<index_t>(std::strtoull(sptr, &eptr, 10));
       if (eptr == sptr) {
         throw BadFileException("Unable to parse line: '" + line + "'");
       }

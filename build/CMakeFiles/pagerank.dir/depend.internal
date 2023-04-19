@@ -8,6 +8,7 @@ CMakeFiles/pagerank.dir/src/graph_partition.cpp.o
  ../include/graph/SNAPFile.hpp
  ../include/graph/TextFile.hpp
  ../include/graph_partition.h
+ ../include/mtmetis.h
  /jet/home/xiaf/build/include/gk_defs.h
  /jet/home/xiaf/build/include/gk_macros.h
  /jet/home/xiaf/build/include/gk_mkblas.h
@@ -18,7 +19,6 @@ CMakeFiles/pagerank.dir/src/graph_partition.cpp.o
  /jet/home/xiaf/build/include/gk_proto.h
  /jet/home/xiaf/build/include/gk_struct.h
  /jet/home/xiaf/build/include/gk_types.h
- /jet/home/xiaf/build/include/metis.h
  /jet/home/xiaf/pagerank/src/graph_partition.cpp
 CMakeFiles/pagerank.dir/src/page_rank.cpp.o
  ../include/CycleTimer.h
@@ -37,6 +37,5 @@ CMakeFiles/pagerank.dir/src/pagerank_main.cpp.o
  ../include/graph/SNAPFile.hpp
  ../include/graph/TextFile.hpp
  ../include/graph_partition.h
- ../include/metis/wildriver.h
  ../include/page_rank.h
  /jet/home/xiaf/pagerank/src/pagerank_main.cpp
