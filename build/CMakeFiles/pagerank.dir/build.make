@@ -113,7 +113,7 @@ pagerank: ../lib/libmtmetis.a
 pagerank: src/graph/libSnapFile.a
 pagerank: /usr/lib/gcc/x86_64-redhat-linux/8/libgomp.so
 pagerank: /usr/lib64/libpthread.so
-pagerank: /jet/home/xiaf/build/lib/libGKlib.a
+pagerank: ../lib/libGKlib.a
 pagerank: CMakeFiles/pagerank.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/jet/home/xiaf/pagerank/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable pagerank"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pagerank.dir/link.txt --verbose=$(VERBOSE)
