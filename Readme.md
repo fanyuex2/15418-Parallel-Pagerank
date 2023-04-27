@@ -20,7 +20,7 @@ I haven't figured out how to install mt-metis with 32bits. The project assumes d
 ```
 mkdir build
 cd build && cmake ..
-./pagerank <num_workers> <method> <runs>
+./pagerank <path_to_graph> <num_workers> <method> <runs>
 <method>: naive, metis, static
 <runs>: to compute the average time across all runs
 ```

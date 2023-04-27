@@ -17,6 +17,7 @@ class PageRank {
                            bool graph_partition);
   double naivePageRank(std::vector<double>* score_new, int avg_iter);
   double dynamicPageRank(std::vector<double>* score_new);
+  double serialPageRank(std::vector<double>* score_new);
 
  private:
   double staticPageRank(Graph* graph, std::vector<double>* score_new,

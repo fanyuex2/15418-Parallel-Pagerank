@@ -12,6 +12,67 @@
 #include "graph_partition.h"
 #define AVGITER 100
 
+double PageRank::serialPageRank(std::vector<double>* score_new) {
+  double start = CycleTimer::currentSeconds();
+  int numNodes = original_graph->nvtxs;
+  double equal_prob = 1.0 / numNodes;
+  bool converged = false;
+  double broadcastScore = 0.0;
+  double globalDiff = 0.0;
+  int iter = 0;
+  bool track_converge[numNodes];
+
+  for (int i = 0; i < numNodes; ++i) {
+    score_old[i] = equal_prob;
+    track_converge[i] = false;
+  }
+
+  while (!converged && iter < max_iter_) {
+    iter++;
+    broadcastScore = 0.0;
+    globalDiff = 0.0;
+    for (int i = 0; i < numNodes; ++i) {
+      if (track_converge[i] == false) {
+        (*score_new)[i] = 0.0;
+        for (index_t v = original_graph->xadj[i]; v < original_graph->xadj[i + 1];
+            ++v) {
+          (*score_new)[i] +=
+            score_old[original_graph->adjncy[v]] /
+            original_graph->outgoing_sizes[original_graph->adjncy[v]];
+        }
+        (*score_new)[i] =
+            damping_ * (*score_new)[i] + (1.0 - damping_) * equal_prob;
+      }
+      if (original_graph->outgoing_sizes[i] == 0) {
+          broadcastScore += score_old[i];
+      }
+    }
+
+    for (int i = 0; i < numNodes; ++i) {
+      if (track_converge[i] == false) {
+        (*score_new)[i] += damping_ * broadcastScore * equal_prob;
+        if (std::abs((*score_new)[i] - score_old[i]) < convergence_) {
+          track_converge[i] = true;
+        }
+      }else{
+        (*score_new)[i]  = score_old[i];
+      }
+      // globalDiff += std::abs((*score_new)[i] - score_old[i]);
+    }
+    
+    for (int i = 0; i < numNodes; i++) {
+      if (track_converge[i] == false) {
+        converged = false;
+        break;
+      }
+    }
+    
+    std::swap((*score_new), score_old);
+  }
+  double pagerank_time = CycleTimer::currentSeconds() - start;
+  return pagerank_time;
+}
+
 double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   double start = CycleTimer::currentSeconds();
   int numNodes = original_graph->nvtxs;
@@ -46,10 +107,10 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
           damping_ * (*score_new)[i] + (1.0 - damping_) * equal_prob;
     }
 
-#pragma omp parallel for default(shared) reduction(+ : globalDiff)
+#pragma omp parallel for default(shared) reduction(max: globalDiff)
     for (int i = 0; i < numNodes; ++i) {
       (*score_new)[i] += damping_ * broadcastScore * equal_prob;
-      globalDiff += std::abs((*score_new)[i] - score_old[i]);
+      globalDiff = std::max((*score_new)[i] - score_old[i], globalDiff);
     }
     converged = (globalDiff < convergence_);
     std::swap((*score_new), score_old);
