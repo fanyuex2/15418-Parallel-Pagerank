@@ -82,8 +82,8 @@ void uvwsorti(size_t n, uvw_t *base) {
 /*************************************************************************/
 void GraphPartition::FixGraph() {
   index_t i, j, k, l, nvtxs, nedges;
-  index_t *xadj, *adjncy, *adjwgt;
-  index_t *nxadj, *nadjncy;
+  index_t *xadj, *adjncy;
+  index_t *nxadj, *nadjncy, *nadjwgt;
   uvw_t *edges;
 
   nvtxs = graph->nvtxs;
@@ -113,10 +113,16 @@ void GraphPartition::FixGraph() {
 
   uvwsorti(nedges, edges);
 
+  std::vector<index_t> *adjwgt = new std::vector<index_t>(0);
+  adjwgt->push_back(1);
   /* keep the unique subset */
   for (k = 0, i = 1; i < nedges; i++) {
     if (edges[k].v != edges[i].v || edges[k].u != edges[i].u) {
       edges[++k] = edges[i];
+      adjwgt->push_back(1);
+    } else {
+      // update edges weight according to the nunmber of incoming edges
+      adjwgt->at(k)++;
     }
   }
   nedges = k + 1;
@@ -125,8 +131,10 @@ void GraphPartition::FixGraph() {
   ngraph->xadj.resize(nvtxs + 1);
   ngraph->nedges = 2 * nedges;
   ngraph->adjncy.resize(2 * nedges);
+  ngraph->adjwgt.resize(2 * nedges);
   nxadj = ngraph->xadj.data();
   nadjncy = ngraph->adjncy.data();
+  nadjwgt = ngraph->adjwgt.data();
 
   /* create the adjacency list of the fixed graph from the upper-triangular
      part of the adjacency matrix */
@@ -139,6 +147,9 @@ void GraphPartition::FixGraph() {
   for (k = 0; k < nedges; k++) {
     nadjncy[nxadj[edges[k].u]] = edges[k].v;
     nadjncy[nxadj[edges[k].v]] = edges[k].u;
+    nadjwgt[nxadj[edges[k].u]] = adjwgt->at(k);
+    nadjwgt[nxadj[edges[k].v]] = adjwgt->at(k);
+
     nxadj[edges[k].u]++;
     nxadj[edges[k].v]++;
   }
@@ -151,6 +162,7 @@ void GraphPartition::FixGraph() {
   for (k = 0; k < nvtxs; k++) {
     ngraph->vwgt[k] = xadj[k + 1] - xadj[k];
   }
+  delete adjwgt;
 }
 
 void GraphPartition::sortNodesByPart() {
@@ -214,6 +226,13 @@ void GraphPartition::partition() {
   for (int i = 0; i < ngraph->vwgt.size(); i++) {
     (*mt_vwgt)[i] = ngraph->vwgt[i];
   }
+
+  std::vector<mtmetis_wgt_type> *mt_adjwgt =
+      new std::vector<mtmetis_wgt_type>(ngraph->adjwgt.size());
+  for (int i = 0; i < ngraph->adjwgt.size(); i++) {
+    (*mt_adjwgt)[i] = ngraph->adjwgt[i];
+  }
+
   mtmetis_pid_type mt_nparts = nparts;
 
   std::vector<mtmetis_pid_type> *mt_parts =
@@ -221,9 +240,10 @@ void GraphPartition::partition() {
 
   double *opts = mtmetis_init_options();
   opts[MTMETIS_OPTION_NTHREADS] = nparts;
-  MTMETIS_PartGraphRecursive(
-      &mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(), mt_vwgt->data(),
-      NULL, NULL, &mt_nparts, NULL, NULL, opts, &edgecut, mt_parts->data());
+  MTMETIS_PartGraphRecursive(&mt_nvtxs, &ncon, mt_xadj->data(),
+                             mt_adjncy->data(), mt_vwgt->data(), NULL,
+                             mt_adjwgt->data(), &mt_nparts, NULL, NULL, opts,
+                             &edgecut, mt_parts->data());
 
   for (int i = 0; i < parts.size(); i++) {
     parts[i] = (int)((*mt_parts)[i]);
@@ -233,6 +253,7 @@ void GraphPartition::partition() {
   delete mt_adjncy;
   delete mt_vwgt;
   delete mt_parts;
+  delete mt_adjwgt;
 }
 
 void GraphPartition::newFromPartition() {

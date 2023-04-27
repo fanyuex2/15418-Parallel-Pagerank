@@ -10,6 +10,7 @@
 #include "CycleTimer.h"
 #include "graph.h"
 #include "graph_partition.h"
+#include "profile/papi.h"
 #define AVGITER 100
 
 double PageRank::dynamicPageRank(std::vector<double>* score_new) {
@@ -134,12 +135,16 @@ double PageRank::partitionPageRank(std::vector<double>* score_new, int avg_iter,
 
   partition->ngraph->outgoingSize();
 
+  int retval;
+  retval = PAPI_hl_region_begin("metis");
+  assert(retval == PAPI_OK);
   double pagerank_time = 0.0;
   for (int i = 0; i < avg_iter; i++) {
     pagerank_time +=
         staticPageRank(partition->ngraph.get(), score_new, partition->nodeidx);
   }
-
+  retval = PAPI_hl_region_end("metis");
+  assert(retval == PAPI_OK);
   /* for (int i = 0; i < original_graph->nvtxs; i++) {
      std::cout << ' ' << (*score_new)[i] << ' ' << std::endl;
    }*/
