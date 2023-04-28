@@ -15,8 +15,11 @@ class PageRank {
         max_iter_(max_iter) {}
   double partitionPageRank(std::vector<double>* score_new, int avg_iter,
                            bool graph_partition);
-  double naivePageRank(std::vector<double>* score_new, int avg_iter);
+  double naivePageRank(std::vector<double>* score_new, int avg_iter,
+                       bool early);
   double dynamicPageRank(std::vector<double>* score_new);
+  double serialPageRank(std::vector<double>* score_new);
+  double earlyConvergePageRank(std::vector<double>* score_new);
 
  private:
   double staticPageRank(Graph* graph, std::vector<double>* score_new,

@@ -13,6 +13,68 @@
 #include "profile/papi.h"
 #define AVGITER 100
 
+double PageRank::earlyConvergePageRank(std::vector<double>* score_new) {
+  double start = CycleTimer::currentSeconds();
+  int numNodes = original_graph->nvtxs;
+  double equal_prob = 1.0 / numNodes;
+  bool converged = false;
+  double broadcastScore = 0.0, broadcastScore_old = 0.0;
+  double globalDiff = 0.0;
+  int iter = 0;
+  std::vector<bool>* Nodeconverged = new std::vector<bool>(numNodes);
+
+  #pragma omp parallel for default(shared) reduction(+ : broadcastScore_old)
+  for (int i = 0; i < numNodes; ++i) {
+    score_old[i] = equal_prob;
+    (*Nodeconverged)[i] = false;
+    if (original_graph->outgoing_sizes[i] == 0) {
+      broadcastScore_old = equal_prob + broadcastScore_old;
+    }
+  }
+
+  while (!converged && iter < max_iter_) {
+    iter++;
+    broadcastScore = 0.0;
+    globalDiff = 0.0;
+
+    converged = true;
+    #pragma omp parallel for schedule(dynamic, 16) reduction(+ : broadcastScore)
+    for (int i = 0; i < numNodes; ++i) {
+      if ((*Nodeconverged)[i] == false) {
+        double score = 0.0;
+        for (index_t v = original_graph->xadj[i]; v < original_graph->xadj[i + 1];
+            ++v) {
+          score +=
+            score_old[original_graph->adjncy[v]] /
+            original_graph->outgoing_sizes[original_graph->adjncy[v]];
+        }
+        score =
+            damping_ * score + (1.0 - damping_) * equal_prob;
+        score += damping_ * broadcastScore_old * equal_prob;
+        (*score_new)[i] = score;
+        double diff = score - score_old[i];
+        if (original_graph->outgoing_sizes[i] == 0) {
+            broadcastScore += diff;
+        }
+        if (std::abs(diff) < convergence_) {
+          (*Nodeconverged)[i] = true;
+        }else{
+          converged = false;
+        }
+      } else{
+        (*score_new)[i]  = score_old[i];
+      }
+    }
+
+    broadcastScore_old+=broadcastScore;
+    
+    std::swap((*score_new), score_old);
+  }
+  double pagerank_time = CycleTimer::currentSeconds() - start;
+  delete Nodeconverged;
+  return pagerank_time;
+}
+
 double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   double start = CycleTimer::currentSeconds();
   int numNodes = original_graph->nvtxs;
@@ -22,6 +84,7 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   double globalDiff = 0.0;
   int iter = 0;
 
+  #pragma omp parallel for default(shared)
   for (int i = 0; i < numNodes; ++i) {
     score_old[i] = equal_prob;
   }
@@ -47,10 +110,10 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
           damping_ * (*score_new)[i] + (1.0 - damping_) * equal_prob;
     }
 
-#pragma omp parallel for default(shared) reduction(+ : globalDiff)
+#pragma omp parallel for default(shared) reduction(max : globalDiff)
     for (int i = 0; i < numNodes; ++i) {
       (*score_new)[i] += damping_ * broadcastScore * equal_prob;
-      globalDiff += std::abs((*score_new)[i] - score_old[i]);
+      globalDiff = std::max((*score_new)[i] - score_old[i], globalDiff);
     }
     converged = (globalDiff < convergence_);
     std::swap((*score_new), score_old);
@@ -59,10 +122,12 @@ double PageRank::dynamicPageRank(std::vector<double>* score_new) {
   return pagerank_time;
 }
 
-double PageRank::naivePageRank(std::vector<double>* score_new, int avg_iter) {
+double PageRank::naivePageRank(std::vector<double>* score_new, int avg_iter,
+                               bool early) {
   double pagerank_time = 0.0;
   for (int i = 0; i < avg_iter; i++) {
-    pagerank_time += dynamicPageRank(score_new);
+    pagerank_time +=
+        early ? earlyConvergePageRank(score_new) : dynamicPageRank(score_new);
   }
   return pagerank_time / avg_iter;
 }
@@ -80,6 +145,7 @@ double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
   double globalDiff = 0.0;
   int iter = 0;
 
+  #pragma omp parallel for default(shared)
   for (int i = 0; i < numNodes; ++i) {
     score_old[i] = equal_prob;
   }
@@ -109,14 +175,14 @@ double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
       broadcastScore += localScore;
     }
 
-#pragma omp parallel for default(shared) reduction(+ : globalDiff)
+#pragma omp parallel for default(shared) reduction(max : globalDiff)
     for (int i = 0; i < numNodes; ++i) {
       (*score_new)[i] += damping_ * broadcastScore * equal_prob;
-      globalDiff += std::abs((*score_new)[i] - score_old[i]);
-      std::swap((*score_new)[i], score_old[i]);
+      globalDiff = std::max((*score_new)[i] - score_old[i], globalDiff);
     }
 
     converged = (globalDiff < convergence_);
+    std::swap((*score_new), score_old);
   }
 
   double pagerank_time = CycleTimer::currentSeconds() - start;

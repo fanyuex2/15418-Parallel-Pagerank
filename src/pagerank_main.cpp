@@ -12,8 +12,8 @@
 
 using namespace std;
 #define PageRankDampening 0.3d
-#define PageRankConvergence 1e-9d
-#define EPSILON 0.00000000001
+#define PageRankConvergence 1e-13d
+#define EPSILON 0.00000001
 #define THREADNUM 8
 
 bool compareApprox(double *ref, double *stu, int nvtxs) {
@@ -62,7 +62,9 @@ int main(int argc, char **argv) {
   std::vector<double> *vec = new std::vector<double>(graph->nvtxs, 0.0);
   double time;
   if (method.compare("naive") == 0)
-    time = par->naivePageRank(vec, avg_iter);
+    time = par->naivePageRank(vec, avg_iter, false);
+  else if (method.compare("early") == 0)
+    time = par->naivePageRank(vec, avg_iter, true);
   else if (method.compare("metis") == 0)
     time = par->partitionPageRank(vec, avg_iter, true);
   else if (method.compare("static") == 0)
@@ -73,8 +75,11 @@ int main(int argc, char **argv) {
   }
   std::cout << time << std::endl;
 
+  omp_set_num_threads(1);
   std::vector<double> *vec2 = new std::vector<double>(graph->nvtxs, 0.0);
   par->dynamicPageRank(vec2);
   assert(compareApprox((*vec).data(), (*vec2).data(), graph->nvtxs));
+  delete vec2;
+  delete vec;
   return 0;
 }
