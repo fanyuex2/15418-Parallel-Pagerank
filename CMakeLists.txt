@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 project(pagerank)
 
 add_library(GKlib SHARED IMPORTED)
-set_property(TARGET GKlib PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/pagerank/lib/libGKlib.a")
+set_property(TARGET GKlib PROPERTY IMPORTED_LOCATION "/jet/home/jw104/15418-Parallel-Pagerank/lib/libGKlib.a")
 
 add_library(mtmetis SHARED IMPORTED)
-set_property(TARGET mtmetis PROPERTY IMPORTED_LOCATION "/jet/home/xiaf/pagerank/lib/libmtmetis.a")
+set_property(TARGET mtmetis PROPERTY IMPORTED_LOCATION "/jet/home/jw104/15418-Parallel-Pagerank/lib/libmtmetis.a")
 target_link_libraries(mtmetis INTERFACE GKlib)
 
 file(GLOB SOURCES "src/*.cpp")

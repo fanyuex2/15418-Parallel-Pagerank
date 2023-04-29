@@ -3,6 +3,9 @@
 #include <algorithm>  // std::sort, std::stable_sort
 #include <cassert>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
 
 #include "common.h"
 #include "gk_defs.h"
@@ -31,6 +34,88 @@ std::shared_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
   return graph;
 }
 
+void GraphPartition::createSavedGraph(const std::string file_name) {
+  std::cout << "Entering create saved graph with graph: " << file_name << std::endl;
+  
+  ifstream myfile;
+  std::string buffer;
+  myfile.open(file_name);
+  
+  // read nvtxs
+  do {
+     std::getline(myfile, buffer);
+  } while (buffer.size() == 0 || buffer[0] == '#');
+  ngraph->nvtxs = atoi(buffer.c_str());
+  buffer.clear();
+  std::cout << "nvtxs: " << ngraph->nvtxs << std::endl;
+
+  // read nedges
+  do {
+     std::getline(myfile, buffer);
+  } while (buffer.size() == 0 || buffer[0] == '#');
+  ngraph->nedges = atoi(buffer.c_str());
+  buffer.clear();
+  std::cout << "nedges: " << ngraph->nedges << std::endl;
+
+  ngraph->xadj.resize(ngraph->nvtxs + 1);
+  ngraph->nedges = 2 * ngraph->nedges;
+  ngraph->adjncy.resize(2 * ngraph->nedges);
+  nodeidx.resize(nparts + 1, 0);
+  // nxadj = ngraph->xadj.data();
+  // nadjncy = ngraph->adjncy.data();
+
+  // read xadj
+  int tmp = 0;
+  std::getline(myfile, buffer);
+  //std::cout << buffer << std::endl;
+
+  std::getline(myfile, buffer);
+  ngraph->xadj[tmp] = atoi(buffer.c_str());
+  tmp += 1;
+  while (buffer[0] != '#') {
+    //std::cout << buffer << std::endl;
+    std::getline(myfile, buffer);
+    ngraph->xadj[tmp] = atoi(buffer.c_str());
+    tmp += 1;
+  }
+  std::cout << "tmp: " << tmp << std::endl;
+
+  // read adjncy
+  //std::cout << buffer << std::endl;
+  int tmp1 = 0;
+  std::getline(myfile, buffer);
+  ngraph->adjncy[tmp1] = atoi(buffer.c_str());
+  tmp1 += 1;
+  while (buffer[0] != '#') {
+    //std::cout << buffer << std::endl;
+    std::getline(myfile, buffer);
+    ngraph->adjncy[tmp1] = atoi(buffer.c_str());
+    tmp1 += 1;
+  }
+  std::cout << "tmp1: " << tmp1 << std::endl;
+
+  // read nodeidx
+  //std::cout << buffer << std::endl;
+  int tmp2 = 0;
+  std::getline(myfile, buffer);
+  nodeidx[tmp2] = atoi(buffer.c_str());
+  tmp2 += 1;
+  while (tmp2 <= nparts + 1) {
+    //std::cout << buffer << std::endl;
+    std::getline(myfile, buffer);
+    nodeidx[tmp2] = atoi(buffer.c_str());
+    tmp2 += 1;
+  }
+  std::cout << "tmp2: " << tmp2 << std::endl;
+
+  // graph->outgoingSize();
+
+  myfile.close();
+
+  std::cout << "Finish create saved graph" << std::endl;
+  
+}
+
 void Graph::outgoingSize() {
   outgoing_sizes.resize(nvtxs, 0);
   for (int i = 0; i < nvtxs; i++) {
@@ -49,6 +134,85 @@ void Graph::printGraph() {
     std::cout << std::endl;
   }
   std::cout << std::endl;
+}
+
+/*
+Format:
+# nvtxs
+# nedges
+# xadj
+# adjncy
+*/
+
+void Graph::saveGraph() {
+  std::cout << "Entering save graph" << std::endl;
+  ofstream myfile;
+  myfile.open ("../graph-files/test.txt");
+  myfile << "# " << nvtxs << "\n";
+  myfile << "# " << nedges << "\n";
+  
+  myfile << "# ";
+  for (int i = 0; i <= nvtxs; i++) {
+    myfile << xadj[i] << " ";
+  }
+  myfile << "\n";
+
+  myfile << "# ";
+  for (int j = 0; j < nedges; j++) {
+    myfile << adjncy[j] << " ";
+  }
+  myfile << "\n";
+
+  myfile.close();
+
+  std::cout << "Finish save graph" << std::endl;
+}
+
+/*
+Format:
+#
+nvtxs
+#
+nedges
+# 
+xadj
+# 
+adjncy
+#
+nodeidx
+*/
+void Graph::savePartitionGraph(std::vector<index_t>& nodeidx) {
+  std::cout << "Entering save partition graph" << std::endl;
+  ofstream myfile;
+  myfile.open ("../static-partition-graphs/test.txt");
+
+  // store num vertex and num edges
+  myfile << "# nvtxs\n";
+  myfile << nvtxs << "\n";
+  myfile << "# nedges\n";
+  myfile << nedges << "\n";
+  
+  // store xadj
+  myfile << "# xadj\n";
+  for (int i = 0; i <= nvtxs; i++) {
+    myfile << xadj[i] << "\n";
+  }
+
+  // store adjncy
+  myfile << "# adjncy\n";
+  for (int j = 0; j < nedges; j++) {
+    myfile << adjncy[j] << "\n";
+  }
+
+  // store nodeidx
+  myfile << "# nodeidx\n";
+  for (int i = 0; i < nodeidx.size(); i++) {
+    myfile << nodeidx[i] << " \n";
+  }
+
+  myfile.close();
+
+  std::cout << "Finish save partition graph" << std::endl;
 }
 
 /*----------------Functions for graph_partition.h------------------------*/
@@ -216,18 +380,17 @@ void GraphPartition::partition() {
   }
   mtmetis_pid_type mt_nparts = nparts;
 
-
   std::vector<mtmetis_pid_type> *mt_parts =
       new std::vector<mtmetis_pid_type>(parts.size());
 
   double *opts = mtmetis_init_options();
   opts[MTMETIS_OPTION_NTHREADS] = nparts;
-  MTMETIS_PartGraphRecursive(&mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(),
-                             mt_vwgt->data(), NULL, NULL, &mt_nparts, NULL, NULL,
-                             opts, &edgecut, mt_parts->data());
+  MTMETIS_PartGraphRecursive(
+      &mt_nvtxs, &ncon, mt_xadj->data(), mt_adjncy->data(), mt_vwgt->data(),
+      NULL, NULL, &mt_nparts, NULL, NULL, opts, &edgecut, mt_parts->data());
 
   for (int i = 0; i < parts.size(); i++) {
-    parts[i]=(int)((*mt_parts)[i]);
+    parts[i] = (int)((*mt_parts)[i]);
   }
 
   delete mt_xadj;
@@ -245,15 +408,26 @@ void GraphPartition::newFromStatic() {
   std::vector<index_t> partition(nparts, 0);
   parts.resize(graph->nvtxs);
 
+  std::vector<index_t> *index = new std::vector<index_t>(graph->nvtxs);
   for (int i = 0; i < graph->nvtxs; i++) {
-    int index = 0;
+    (*index)[i] = i;
+  }
+  std::stable_sort((*index).begin(), (*index).end(),
+                   [this](size_t i1, size_t i2) {
+                     return (graph->xadj[i1 + 1] - graph->xadj[i1]) >
+                            (graph->xadj[i2 + 1] - graph->xadj[i2]);
+                   });
+
+  for (int i = 0; i < graph->nvtxs; i++) {
+    int min_index = 0;
 
     for (int j = 1; j < nparts; j++) {
-      if (partition[j] < partition[index]) index = j;
+      if (partition[j] < partition[min_index]) min_index = j;
     }
 
-    parts[i] = index;
-    partition[index] += graph->xadj[i + 1] - graph->xadj[i];
+    parts[(*index)[i]] = min_index;
+    partition[min_index] +=
+        graph->xadj[(*index)[i] + 1] - graph->xadj[(*index)[i]];
   }
   sortNodesByPart();
 }

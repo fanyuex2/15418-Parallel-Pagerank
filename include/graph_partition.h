@@ -9,6 +9,7 @@ class GraphPartition {
   void newFromPartition();
   void newFromStatic();
   void printPartition();
+  void createSavedGraph(const std::string file_name);
 
   std::unique_ptr<Graph> ngraph;
   std::vector<index_t> nodeidx;

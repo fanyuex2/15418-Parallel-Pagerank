@@ -12,15 +12,14 @@ class PageRank {
         score_old(original_graph->nvtxs, 0),
         damping_(damping),
         convergence_(convergence),
-        max_iter_(max_iter) {
-          
-        }
-  double partitionPageRank(std::vector<double>* score_new, index_t nparts, bool graph_partition);
+        max_iter_(max_iter) {}
+  double partitionPageRank(std::vector<double>* score_new, int avg_iter,
+                           bool graph_partition);
+  double naivePageRank(std::vector<double>* score_new, int avg_iter);
   double dynamicPageRank(std::vector<double>* score_new);
 
  private:
-  double staticPageRank(Graph* graph,
-                        std::vector<double>* score_new,
+  double staticPageRank(Graph* graph, std::vector<double>* score_new,
                         std::vector<index_t>& nodeidx);
   std::shared_ptr<Graph> original_graph;
   std::vector<double> score_old;
