@@ -16,12 +16,13 @@ class Graph {
   std::vector<index_t> adjncy;
   std::vector<index_t> vwgt;
   std::vector<index_t> outgoing_sizes;
+  std::vector<index_t> nodeidx;
   static std::shared_ptr<Graph> createMetisGraph(const std::string file_name);
+  static std::shared_ptr<Graph> createSavedGraph(const std::string file_name);
   void outgoingSize();
   void printGraph();
   void saveGraph();
   void savePartitionGraph(std::vector<index_t>& nodeidx);
-  static std::shared_ptr<Graph> createSavedGraph(const std::string file_name);
   
 };
 

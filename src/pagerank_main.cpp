@@ -5,8 +5,6 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
-#include <iomanip>
-
 
 #include "graph.h"
 #include "graph_partition.h"
@@ -14,14 +12,14 @@
 
 using namespace std;
 #define PageRankDampening 0.3d
-#define PageRankConvergence 1e-13d
-#define EPSILON 0.00000001
+#define PageRankConvergence 1e-9d
+#define EPSILON 0.00000000001
 #define THREADNUM 8
 
 bool compareApprox(double *ref, double *stu, int nvtxs) {
   for (int i = 0; i < nvtxs; i++) {
     if (fabs(ref[i] - stu[i]) > EPSILON) {
-      std::cout << "*** Results disagree at " << i << " expected " << ref[i]
+      std::cerr << "*** Results disagree at " << i << " expected " << ref[i]
                 << " found " << stu[i] << std::endl;
       return false;
     }
@@ -40,13 +38,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  std::shared_ptr<Graph> graph =
-      Graph::createMetisGraph(argv[1]);
- // graph->printGraph();
- // graph->saveGraph();
-
-  std::unique_ptr<PageRank> par = std::make_unique<PageRank>(
-      graph, PageRankDampening, PageRankConvergence, 500);
+  //graph->saveGraph();
 
   int thread_count = -1;
   thread_count = atoi(argv[2]);
@@ -64,6 +56,18 @@ int main(int argc, char **argv) {
 
   std::string method = argv[3];
   omp_set_num_threads(thread_count);
+
+  std::shared_ptr<Graph> graph;
+  std::unique_ptr<PageRank> par;
+  
+  if (method.compare("naive") == 0) {
+    graph = Graph::createMetisGraph(argv[1]);
+    par = std::make_unique<PageRank>(graph, PageRankDampening, PageRankConvergence, 500);
+  } else {
+    graph = Graph::createSavedGraph(argv[1]);
+    par = std::make_unique<PageRank>(graph, PageRankDampening, PageRankConvergence, 500);
+  }
+
   std::vector<double> *vec = new std::vector<double>(graph->nvtxs, 0.0);
   double time;
   if (method.compare("naive") == 0)
@@ -78,29 +82,8 @@ int main(int argc, char **argv) {
   }
   std::cout << time << std::endl;
 
-  std::cout << std::fixed;
-  std::cout << std::setprecision(10);
-
-  // double* sol = (*vec).data();
-  // std::cout << "pageRank scores: ";
-  // for (int i = 0; i < graph->nvtxs; i++){
-  //   double score = sol[i];
-  //   std::cout << score << " ";
-  // }
-  // std::cout << std::endl;
-
-  omp_set_num_threads(1);
   std::vector<double> *vec2 = new std::vector<double>(graph->nvtxs, 0.0);
   par->dynamicPageRank(vec2);
-
-  // double* ref = (*vec2).data();
-  // std::cout << "ref scores: ";
-  // for (int i = 0; i < graph->nvtxs; i++){
-  //   double score = ref[i];
-  //   std::cout << score << " ";
-  // }
-  // std::cout << std::endl;
-
-  //assert(compareApprox((*vec).data(), (*vec2).data(), graph->nvtxs));
+  // assert(compareApprox((*vec).data(), (*vec2).data(), graph->nvtxs));
   return 0;
 }

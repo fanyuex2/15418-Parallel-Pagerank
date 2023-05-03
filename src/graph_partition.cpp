@@ -34,13 +34,14 @@ std::shared_ptr<Graph> Graph::createMetisGraph(const std::string file_name) {
   return graph;
 }
 
-void GraphPartition::createSavedGraph(const std::string file_name) {
+std::shared_ptr<Graph> Graph::createSavedGraph(const std::string file_name) {
   std::cout << "Entering create saved graph with graph: " << file_name << std::endl;
   
   ifstream myfile;
   std::string buffer;
   myfile.open(file_name);
   
+  std::shared_ptr<Graph> ngraph = std::make_shared<Graph>();
   // read nvtxs
   do {
      std::getline(myfile, buffer);
@@ -60,60 +61,50 @@ void GraphPartition::createSavedGraph(const std::string file_name) {
   ngraph->xadj.resize(ngraph->nvtxs + 1);
   ngraph->nedges = 2 * ngraph->nedges;
   ngraph->adjncy.resize(2 * ngraph->nedges);
-  nodeidx.resize(nparts + 1, 0);
-  // nxadj = ngraph->xadj.data();
-  // nadjncy = ngraph->adjncy.data();
+  ngraph->nodeidx.resize(64 + 1, 0);
 
   // read xadj
   int tmp = 0;
   std::getline(myfile, buffer);
-  //std::cout << buffer << std::endl;
-
   std::getline(myfile, buffer);
   ngraph->xadj[tmp] = atoi(buffer.c_str());
   tmp += 1;
   while (buffer[0] != '#') {
-    //std::cout << buffer << std::endl;
+   // std::cout << buffer << std::endl;
     std::getline(myfile, buffer);
     ngraph->xadj[tmp] = atoi(buffer.c_str());
     tmp += 1;
   }
-  std::cout << "tmp: " << tmp << std::endl;
 
   // read adjncy
-  //std::cout << buffer << std::endl;
   int tmp1 = 0;
   std::getline(myfile, buffer);
   ngraph->adjncy[tmp1] = atoi(buffer.c_str());
   tmp1 += 1;
   while (buffer[0] != '#') {
-    //std::cout << buffer << std::endl;
     std::getline(myfile, buffer);
     ngraph->adjncy[tmp1] = atoi(buffer.c_str());
     tmp1 += 1;
   }
-  std::cout << "tmp1: " << tmp1 << std::endl;
-
+  
   // read nodeidx
-  //std::cout << buffer << std::endl;
   int tmp2 = 0;
   std::getline(myfile, buffer);
-  nodeidx[tmp2] = atoi(buffer.c_str());
+  ngraph->nodeidx[tmp2] = atoi(buffer.c_str());
   tmp2 += 1;
-  while (tmp2 <= nparts + 1) {
-    //std::cout << buffer << std::endl;
+  while (tmp2 <= 64 + 1) {
     std::getline(myfile, buffer);
-    nodeidx[tmp2] = atoi(buffer.c_str());
+    ngraph->nodeidx[tmp2] = atoi(buffer.c_str());
     tmp2 += 1;
   }
-  std::cout << "tmp2: " << tmp2 << std::endl;
 
-  // graph->outgoingSize();
+  ngraph->outgoingSize();
 
   myfile.close();
 
   std::cout << "Finish create saved graph" << std::endl;
   
+  return ngraph;
 }
 
 void Graph::outgoingSize() {

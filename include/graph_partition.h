@@ -9,18 +9,17 @@ class GraphPartition {
   void newFromPartition();
   void newFromStatic();
   void printPartition();
-  void createSavedGraph(const std::string file_name);
 
   std::unique_ptr<Graph> ngraph;
   std::vector<index_t> nodeidx;
   std::vector<index_t> N2Oidx;
   std::vector<index_t> O2Nidx;
+  std::shared_ptr<Graph> graph;
 
  private:
   void FixGraph();
   void partition();
   void sortNodesByPart();
-  std::shared_ptr<Graph> graph;
   std::vector<index_t> parts;
   index_t nparts;
 };

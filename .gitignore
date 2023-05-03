@@ -1,2 +1,4 @@
 build/*
 graph-files/*
+static-partition-graphs/*
+metis-partition-graphs/*

@@ -124,37 +124,33 @@ double PageRank::staticPageRank(Graph* graph, std::vector<double>* score_new,
 
 double PageRank::partitionPageRank(std::vector<double>* score_new, int avg_iter,
                                    bool graph_partition) {
-  std::unique_ptr<GraphPartition> partition =
-      std::make_unique<GraphPartition>(original_graph, omp_get_max_threads());
+  //std::unique_ptr<GraphPartition> partition =
+  //    std::make_unique<GraphPartition>(original_graph, omp_get_max_threads());
 
   // if (graph_partition)
   //   partition->newFromPartition();
   // else
   //   partition->newFromStatic();
 
-  partition->createSavedGraph("../metis-partition-graphs/soc-LiveJournal1.txt");
-  partition->ngraph->outgoingSize();
+  // partition->createSavedGraph("../static-partition-graphs/WikiTalk.txt");
+  // partition->ngraph->outgoingSize();
   // partition->ngraph->printGraph();
 
   // save ngraph
-  // partition->nodeidx
   // partition->ngraph->savePartitionGraph(partition->nodeidx);
 
   double pagerank_time = 0.0;
   for (int i = 0; i < avg_iter; i++) {
     pagerank_time +=
-        staticPageRank(partition->ngraph.get(), score_new, partition->nodeidx);
+        staticPageRank(original_graph.get(), score_new, original_graph->nodeidx);
   }
 
   /* for (int i = 0; i < original_graph->nvtxs; i++) {
      std::cout << ' ' << (*score_new)[i] << ' ' << std::endl;
    }*/
   // for (int i = 0; i < original_graph->nvtxs; i++) {
-  //   std::cout << "bye" << std::endl;
   //   // std::cout << ' ' << partition->O2Nidx[i] << ' ' << std::endl;
   //   score_old[partition->N2Oidx[i]] = (*score_new)[i];
-
-  //   std::cout << "hello" << std::endl;
   // }
   // std::swap((*score_new), score_old);
   return pagerank_time / avg_iter;
