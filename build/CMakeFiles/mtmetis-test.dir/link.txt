@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/mtmetis-test.dir/src/mtmetis-test.cpp.o CMakeFiles/mtmetis-test.dir/src/parallel-pagerank.cpp.o  -o mtmetis-test ../lib/libmtmetis.a src/graph/libSnapFile.a /usr/lib/gcc/x86_64-redhat-linux/8/libgomp.so /usr/lib64/libpthread.so 

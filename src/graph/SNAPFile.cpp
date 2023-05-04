@@ -19,6 +19,7 @@
 
 #include "Exception.hpp"
 
+#define index_t int
 /******************************************************************************
  * TYPES ***********************************************************************
  ******************************************************************************/
@@ -26,8 +27,8 @@
 namespace {
 
 struct edge_struct {
-  uint64_t src;
-  uint64_t dst;
+  index_t src;
+  index_t dst;
 };
 
 }  // namespace
@@ -74,8 +75,7 @@ std::vector<std::string> split(std::string const line) {
   return chunks;
 }
 
-std::vector<edge_struct> readEdges(TextFile* file,
-                                   uint64_t const numEdges = 0) {
+std::vector<edge_struct> readEdges(TextFile* file, index_t const numEdges = 0) {
   std::string line;
   std::vector<edge_struct> edges;
   if (numEdges != 0) {
@@ -90,13 +90,13 @@ std::vector<edge_struct> readEdges(TextFile* file,
       edge_struct edge{0, 0};
       char* eptr = (char*)line.data();
       char* sptr = eptr;
-      edge.dst = std::strtoull(sptr, &eptr, 10);
+      edge.dst = static_cast<index_t>(std::strtoull(sptr, &eptr, 10));
       if (eptr == sptr) {
         throw BadFileException("Unable to parse line: '" + line + "'");
       }
 
       sptr = eptr;
-      edge.src = static_cast<uint64_t>(std::strtoull(sptr, &eptr, 10));
+      edge.src = static_cast<index_t>(std::strtoull(sptr, &eptr, 10));
       if (eptr == sptr) {
         throw BadFileException("Unable to parse line: '" + line + "'");
       }
@@ -117,21 +117,21 @@ std::vector<edge_struct> readEdges(TextFile* file,
  * @param numVerticesOut The memory address to write the number of vertices to.
  * @param numEdgesOut The memory address to write the number of edges to.
  */
-void countVerticesAndEdges(TextFile* const file, uint64_t* const numVerticesOut,
-                           uint64_t* const numEdgesOut) {
-  std::unordered_set<uint64_t> vertices;
+void countVerticesAndEdges(TextFile* const file, index_t* const numVerticesOut,
+                           index_t* const numEdgesOut) {
+  std::unordered_set<index_t> vertices;
   std::string line;
-  uint64_t numEdges = 0;
+  index_t numEdges = 0;
   while (file->nextLine(line)) {
     char* eptr = (char*)line.data();
     char* sptr = eptr;
-    uint64_t const src = std::strtoull(sptr, &eptr, 10);
+    index_t const src = std::strtoull(sptr, &eptr, 10);
     if (eptr == sptr) {
       throw BadFileException("Unable to parse line: '" + line + "'");
     }
 
     sptr = eptr;
-    uint64_t const dst = std::strtoull(sptr, &eptr, 10);
+    index_t const dst = std::strtoull(sptr, &eptr, 10);
     if (eptr == sptr) {
       throw BadFileException("Unable to parse line: '" + line + "'");
     }
@@ -142,7 +142,7 @@ void countVerticesAndEdges(TextFile* const file, uint64_t* const numVerticesOut,
     ++numEdges;
   }
 
-  *numVerticesOut = static_cast<uint64_t>(vertices.size());
+  *numVerticesOut = static_cast<index_t>(vertices.size());
   *numEdgesOut = numEdges;
 }
 
@@ -186,8 +186,8 @@ void SNAPFile::readHeader() {
       }
 
       try {
-        m_numVertices = static_cast<uint64_t>(std::stoull(chunks[2]));
-        m_numEdges = static_cast<uint64_t>(std::stoull(chunks[4]));
+        m_numVertices = static_cast<index_t>(std::stoull(chunks[2]));
+        m_numEdges = static_cast<index_t>(std::stoull(chunks[4]));
       } catch (std::exception const& e) {
         throw BadFileException(std::string("Failed to parse vertices and "
                                            "edges from header line: ") +
@@ -237,13 +237,12 @@ SNAPFile::~SNAPFile() {
  * PUBLIC METHODS **************************************************************
  ******************************************************************************/
 
-void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
-                    uint64_t* out_edges) {
+void SNAPFile::read(index_t* const xadj, index_t* const adjncy) {
   if (m_numVertices == 0) {
     return;
   }
 
-  uint64_t const interval = m_numEdges * 2 > 100 ? m_numEdges * 2 / 100 : 1;
+  index_t const interval = m_numEdges * 2 > 100 ? m_numEdges * 2 / 100 : 1;
   double const increment = 1.0 / 100.0;
 
   std::string line;
@@ -252,7 +251,7 @@ void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
   const std::vector<edge_struct> edges = readEdges(&m_file, m_numEdges);
 
   // zero out xadj
-  for (uint64_t i = 0; i < m_numVertices; ++i) {
+  for (index_t i = 0; i < m_numVertices; ++i) {
     xadj[i] = 0;
   }
 
@@ -267,7 +266,6 @@ void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
                              std::to_string(edge.src));
     }
     ++xadj[edge.src + 1];
-    ++out_edges[edge.dst];
     if (!m_directed) {
       ++xadj[edge.dst + 1];
     }
@@ -277,22 +275,22 @@ void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
 
   // shift xadj and prefixsum
   xadj[0] = 0;
-  for (uint64_t v = 1; v <= m_numVertices; ++v) {
+  for (index_t v = 1; v <= m_numVertices; ++v) {
     xadj[v] += xadj[v - 1];
   }
-  for (uint64_t v = m_numVertices; v > 0; --v) {
+  for (index_t v = m_numVertices; v > 0; --v) {
     xadj[v] = xadj[v - 1];
   }
   assert(xadj[0] == 0);
 
   // fill in edges
   for (edge_struct const& edge : edges) {
-    uint64_t const srcIdx = xadj[edge.src + 1];
+    index_t const srcIdx = xadj[edge.src + 1];
     adjncy[srcIdx] = edge.dst;
     ++xadj[edge.src + 1];
 
     if (!m_directed) {
-      uint64_t const dstIdx = xadj[edge.dst + 1];
+      index_t const dstIdx = xadj[edge.dst + 1];
       adjncy[dstIdx] = edge.src;
       ++xadj[edge.dst + 1];
     }
@@ -302,7 +300,7 @@ void SNAPFile::read(uint64_t* const xadj, uint64_t* const adjncy,
   assert(xadj[m_numVertices] == m_numEdges);
 }
 
-void SNAPFile::getInfo(uint64_t& nvtxs, uint64_t& nedges) {
+void SNAPFile::getInfo(index_t& nvtxs, index_t& nedges) {
   readHeader();
 
   nvtxs = m_numVertices;
