@@ -37,7 +37,7 @@ Nodes: 4847571 Edges: 68993773 \
 
 ### Schedule and Progress:
 
-- 4.1 - 4.10: Explore Metis libraries (Fanyue) and graph loading (Jingwei)
-- 4.11 - 4.19 Finish naive, static, metis methods (Fanyue) and explore larger graph (Jingwei)
-- 4.20 - 4.29 Explore early converged method (Fanyue) and profiling (Jingwei)
+- 4.1 - 4.10 Explore Metis libraries (Fanyue) and graph loading (Jingwei)
+- 4.11 - 4.19 Finish static and metis methods (Fanyue) and import larger graphs (Jingwei)
+- 4.20 - 4.29 Explore early convergence (Fanyue) and profiling (Jingwei)
 - 4.30 - 5.4 Write final reports (both), website (Fanyue), and poster (Jingwei)
