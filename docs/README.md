@@ -2,7 +2,7 @@ _URL_:https://fanyuex2.github.io/Parallel-Partition-Based-Pagerank/
 
 _SUMMARY_: This project attempts to parallelize pagerank algorithm in shared address space model using openMP based on graph partition. The result shows metis graph partitioning performs better, which might be due to increased locality.
 
-# Pagerank Algorithm
+# Background: Pagerank
 
 ![Image](images/page_rank_basic.jpg)
 
@@ -34,3 +34,10 @@ Nodes: 2394385 Edges: 5021410 \
 
 Nodes: 4847571 Edges: 68993773 \
 <img src="images/soc.jpg"  width="300" height="200">
+
+### Schedule and Progress:
+
+- 4.1 - 4.10: Explore Metis libraries (Fanyue) and graph loading (Jingwei)
+- 4.11 - 4.19 Finish naive, static, metis methods (Fanyue) and explore larger graph (Jingwei)
+- 4.20 - 4.29 Explore early converged method (Fanyue) and profiling (Jingwei)
+- 4.30 - 5.4 Write final reports (both), website (Fanyue), and poster (Jingwei)
