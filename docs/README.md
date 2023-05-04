@@ -27,8 +27,10 @@ _SUMMARY_: This project attemptshttps://fanyuex2.github.io/Parallel-Partition-Ba
 # Results
 
 Nodes: ~917000 Edges: 5105039
-![Image](images/web-Google.jpg)
+<img src="images/web-Google.jpg"  width="300" height="200">
+
 Nodes: 2394385 Edges: 5021410
-![Image](images/wikiTalk.jpg)
+<img src="images/wikiTalk.jpg"  width="300" height="200">
+
 Nodes: 4847571 Edges: 68993773
-![Image](images/soc.jpg)
+<img src="images/soc.jpg"  width="300" height="200">
